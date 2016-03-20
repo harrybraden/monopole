@@ -1,8 +1,10 @@
 __author__ = 'hwb'
-from mpmath import ellipk, j, taufrom, jtheta, sqrt, qfrom, ellipf, asin, mfrom, pi
-from numpy import roots, complex64, conj
+from mpmath import ellipk, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
+from numpy import roots, complex64, conj, pi, sqrt
+import mpmath
 import time
 import matrices
+
 
 
 def quartic_roots(k, x1, x2, x3):
@@ -40,11 +42,15 @@ def calc_eta(k, x1, x2, x3):
 def calc_abel(k, zeta, eta):
     k1 = sqrt(1-k**2)
 
-    a=k1+j*k
+    a=k1+complex(0, 1)*k
 
-    b=k1-j*k
+    b=k1-complex(0, 1)*k
 
-    abel_tmp = map(lambda zetai : complex(0, 1)*complex64(1/(ellipk(k**2)*2*b)*ellipf( asin( (zetai )/a), mfrom(k=a/b)))-taufrom(k=k)/2, zeta)
+    abel_tmp = map(lambda zetai : \
+                       complex(0, 1) * 1/(complex64(ellipk(k**2))*2*b) \
+                                     * complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))) \
+                       - taufrom(k=k)/2,
+               zeta)
 
     abel = []
     for i in range(0, 4, 1):
@@ -79,24 +85,32 @@ def calc_mu(k, x1, x2, x3, zeta, abel):
 
 
 def calc_phi_squared(k, x1, x2, x3):
-
+    t0= time.time()
     zeta = calc_zeta(k ,x1, x2, x3)
+    t1 = time.time()
+    print "zeta: " + str(t1-t0)
     eta = calc_eta(k, x1, x2, x3)
+    t2 = time.time()
+    print "eta: " + str(t2-t1)
     abel = calc_abel(k, zeta, eta)
+    t3 = time.time()
+    print "abel: " + str(t3-t2)
     mu = calc_mu(k, x1, x2, x3, zeta, abel)
+    t4 = time.time()
+    print "mu: " + str(t4-t3)
 
-    return matrices.HIGGSTRACE(map(lambda z:complex(z), zeta), mu, [x1, x2, x3], k)
+    result =  matrices.HIGGSTRACE(map(lambda z:complex(z), zeta), mu, [x1, x2, x3], k)
+    t5 = time.time()
+    print "Higgs: " + str(t5-t4)
+    print "Total: " + str(t5-t0)
+    return result
 
-k = 0.5
+k = 0.8
 x1 = .6
-x2 = 0.0
+x2 = 0.8
 x3 = 0.8
 
-
-t0 = time.time()
 print calc_phi_squared(k ,x1, x2, x3)
-t1 = time.time()
-print t1- t0
 
 
 
