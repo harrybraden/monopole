@@ -1,5 +1,5 @@
 __author__ = 'hwb'
-from mpmath import *
+from mpmath import ellipk, j, taufrom, jtheta, sqrt, qfrom, ellipf, asin, mfrom, pi
 from numpy import roots, complex64, conj
 import time
 import matrices
