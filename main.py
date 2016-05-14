@@ -5,7 +5,8 @@ import mpmath
 import time
 import matrices
 import os
-import laplace
+from laplace import five_point_laplace
+import math
 
 
 
@@ -31,7 +32,6 @@ def order_roots(roots):
         return [roots[0],roots[1],roots[2],roots[3]]
     elif abs(roots[0]+1/conj(roots[3])) <10**(-4):
         return[roots[0],roots[1],roots[3],roots[2]]
-
     raise ValueError
 
 def calc_zeta(k, x1, x2, x3):
@@ -87,81 +87,83 @@ def calc_mu(k, x1, x2, x3, zeta, abel):
 
 
 def calc_phi_squared(k, x1, x2, x3):
-    t0= time.time()
+    # t0= time.time()
     zeta = calc_zeta(k ,x1, x2, x3)
-    t1 = time.time()
+    # t1 = time.time()
     # print "zeta: " + str(t1-t0)
     eta = calc_eta(k, x1, x2, x3)
-    t2 = time.time()
+    # t2 = time.time()
     # print "eta: " + str(t2-t1)
     abel = calc_abel(k, zeta, eta)
-    t3 = time.time()
+    # t3 = time.time()
     # print "abel: " + str(t3-t2)
     mu = calc_mu(k, x1, x2, x3, zeta, abel)
-    t4 = time.time()
+    # t4 = time.time()
     # print "mu: " + str(t4-t3)
 
     result =  matrices.HIGGSTRACE(map(lambda z:complex(z), zeta), mu, [x1, x2, x3], k)
-    t5 = time.time()
+    # t5 = time.time()
     # print "Higgs: " + str(t5-t4)
     # print "Total: " + str(t5-t0)
     return result.real
 
-k = 0.8
-x1 = 0.5
-x2 = 0.0
-x3 = 0.0
-
-print "%.8f"%  calc_phi_squared(k ,x1, x2, x3).real
-# print "%.8f"%  calc_phi_squared(k ,6, 6, 6).real
 
 
-# phi = []
-# for i in range(2, 600, 2):
-#     phi.append(calc_phi_squared(0.8, float(i)/100, 0, 0).real)
-# lap_phi = laplace(phi)*float( (50)**2 )
-#
-# fo = open(os.path.expanduser("~/Desktop/hwb_xlaplace"), 'w' )
-# for i in range(0, len(lap_phi), 1):
-#     fo.write("%4.2f %15.9f\n"% ( (float(2*i) +2)/100, lap_phi[i]))
-# fo.close()
+def energy_density(k, x1, x2, x3):
+    step_size = 0.02
 
-phi = []
-for i in range(200, 600, 1):
-    phi.append(calc_phi_squared(0.8, float(i)/100, 0, 0).real)
-lap_phi = laplace(phi)*float( (100)**2 )
+    points = []
+    for a in range(-2, 3, 1):
+        points_y = []
+        for b in range(-2, 3, 1):
+            points_z = []
+            for c in range(-2, 3, 1):
+                points_z.append(calc_phi_squared(k, float(x1 + a * step_size), float(x2 + b * step_size), float(x3 + c * step_size)))
+            points_y.append(points_z)
+        points.append(points_y)
 
-fo = open(os.path.expanduser("~/Desktop/hwb_xlaplaceR"), 'w' )
-for i in range(0, len(lap_phi), 1):
-    fo.write("%4.2f %15.9f\n"% ( (float(i)+200 )/100, lap_phi[i]))
-fo.close()
+    return five_point_laplace(points, step_size)
 
+# print energy_density(0.8, 1, 1, 1)
 
-print phi[100], phi[101], phi[102]
-print lap_phi[100], lap_phi[101], lap_phi[102]
+def energy_density_on_line(k, x0, y0, z0, axis, end):
+    if (axis not in ['x','y','z']):
+        raise ValueError("Invalid axis given. Must be one of 'x', 'y', or 'z'")
 
-
-# t6 = time.time()
-# fo = open(os.path.expanduser("~/Desktop/hwb_xdiag"), 'w' )
-# for i in range(0,600,1):
-#      fo.write("%4.2f %15.9f\n"% ((-5.99+i*.02)*sqrt(3), calc_phi_squared(k ,-5.99+i*.02, -5.99+i*.02, -5.99+i*.02).real) )
-# fo.close()
-# t7 = time.time()
-#
-# print t7-t6
+    step_size = 0.02
+    if (axis == 'x'):
+        start = x0
+    elif (axis == 'y'):
+        start = y0
+    elif (axis == 'z'):
+        start = z0
+    intervals = int(math.ceil((end - start)/step_size))
 
 
-zeta= calc_zeta(k, x1, x2, x3)
-eta= calc_eta(k, x1, x2, x3)
-abel= calc_abel(k, zeta, eta)
-mu= calc_mu(k, x1, x2, x3, zeta, abel)
+    points = []
+    for a in range(0, intervals, 1):
+        points_y = []
+        for b in range(-2, 3, 1):
+            points_z = []
+            for c in range(-2, 3, 1):
+                if(b == 0 or c == 0):
+                    if (axis == 'x'):
+                        points_z.append(calc_phi_squared(k, float(x0 + a * step_size), float(y0 + b * step_size), float(z0 + c * step_size)))
+                    elif (axis == 'y'):
+                        points_z.append(calc_phi_squared(k, float(x0 + b * step_size), float(y0 + a * step_size), float(z0 + c * step_size)))
+                    elif (axis == 'z'):
+                        points_z.append(calc_phi_squared(k, float(x0 + c * step_size), float(y0 + b * step_size), float(z0 + a * step_size)))
+                else:
+                    points_z.append(0) # Value is not used in laplace calculation
+            points_y.append(points_z)
+        points.append(points_y)
 
-# print zeta
-# print eta
-# print abel
-# print mu
+    return five_point_laplace(points, step_size)
 
 
-# print sum(abel)
-# print sum( abel+conj(abel) )
-# print abel[0]+conj(abel)[2], abel[1]+conj(abel)[3]
+
+# print energy_density_on_line(0.8, 0.5, 0, 0, 'x', 2.5)
+# print energy_density_on_line(0.8, 0, 0.5, 0, 'y', 2.5)
+# print energy_density_on_line(0.8, 0, 0, 0.5, 'z', 2.5)
+
+print energy_density_on_line(0.8, 4, 0, 0, 'x', 5)
