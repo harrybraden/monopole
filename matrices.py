@@ -1,6 +1,6 @@
-from numpy import *
-from numpy import complex as complex
-from mpmath import *
+
+from numpy import complex, complex64, mat, dot, trace, pi, sqrt
+from mpmath import ellipk, ellipe
 import cmath
 from numpy.linalg import inv
 import time
