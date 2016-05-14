@@ -1,9 +1,11 @@
 __author__ = 'hwb'
 from mpmath import ellipk, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
-from numpy import roots, complex64, conj, pi, sqrt
+from numpy import roots, complex64, conj, pi, sqrt, sum
 import mpmath
 import time
 import matrices
+import os
+import laplace
 
 
 
@@ -88,29 +90,78 @@ def calc_phi_squared(k, x1, x2, x3):
     t0= time.time()
     zeta = calc_zeta(k ,x1, x2, x3)
     t1 = time.time()
-    print "zeta: " + str(t1-t0)
+    # print "zeta: " + str(t1-t0)
     eta = calc_eta(k, x1, x2, x3)
     t2 = time.time()
-    print "eta: " + str(t2-t1)
+    # print "eta: " + str(t2-t1)
     abel = calc_abel(k, zeta, eta)
     t3 = time.time()
-    print "abel: " + str(t3-t2)
+    # print "abel: " + str(t3-t2)
     mu = calc_mu(k, x1, x2, x3, zeta, abel)
     t4 = time.time()
-    print "mu: " + str(t4-t3)
+    # print "mu: " + str(t4-t3)
 
     result =  matrices.HIGGSTRACE(map(lambda z:complex(z), zeta), mu, [x1, x2, x3], k)
     t5 = time.time()
-    print "Higgs: " + str(t5-t4)
-    print "Total: " + str(t5-t0)
-    return result
+    # print "Higgs: " + str(t5-t4)
+    # print "Total: " + str(t5-t0)
+    return result.real
 
 k = 0.8
-x1 = .6
-x2 = 0.8
-x3 = 0.8
+x1 = 0.5
+x2 = 0.0
+x3 = 0.0
 
-print calc_phi_squared(k ,x1, x2, x3)
+print "%.8f"%  calc_phi_squared(k ,x1, x2, x3).real
+# print "%.8f"%  calc_phi_squared(k ,6, 6, 6).real
 
 
+# phi = []
+# for i in range(2, 600, 2):
+#     phi.append(calc_phi_squared(0.8, float(i)/100, 0, 0).real)
+# lap_phi = laplace(phi)*float( (50)**2 )
+#
+# fo = open(os.path.expanduser("~/Desktop/hwb_xlaplace"), 'w' )
+# for i in range(0, len(lap_phi), 1):
+#     fo.write("%4.2f %15.9f\n"% ( (float(2*i) +2)/100, lap_phi[i]))
+# fo.close()
 
+phi = []
+for i in range(200, 600, 1):
+    phi.append(calc_phi_squared(0.8, float(i)/100, 0, 0).real)
+lap_phi = laplace(phi)*float( (100)**2 )
+
+fo = open(os.path.expanduser("~/Desktop/hwb_xlaplaceR"), 'w' )
+for i in range(0, len(lap_phi), 1):
+    fo.write("%4.2f %15.9f\n"% ( (float(i)+200 )/100, lap_phi[i]))
+fo.close()
+
+
+print phi[100], phi[101], phi[102]
+print lap_phi[100], lap_phi[101], lap_phi[102]
+
+
+# t6 = time.time()
+# fo = open(os.path.expanduser("~/Desktop/hwb_xdiag"), 'w' )
+# for i in range(0,600,1):
+#      fo.write("%4.2f %15.9f\n"% ((-5.99+i*.02)*sqrt(3), calc_phi_squared(k ,-5.99+i*.02, -5.99+i*.02, -5.99+i*.02).real) )
+# fo.close()
+# t7 = time.time()
+#
+# print t7-t6
+
+
+zeta= calc_zeta(k, x1, x2, x3)
+eta= calc_eta(k, x1, x2, x3)
+abel= calc_abel(k, zeta, eta)
+mu= calc_mu(k, x1, x2, x3, zeta, abel)
+
+# print zeta
+# print eta
+# print abel
+# print mu
+
+
+# print sum(abel)
+# print sum( abel+conj(abel) )
+# print abel[0]+conj(abel)[2], abel[1]+conj(abel)[3]
