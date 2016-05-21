@@ -122,7 +122,7 @@ def energy_density(k, x1, x2, x3):
             points_y.append(points_z)
         points.append(points_y)
 
-    return five_point_laplace(points, step_size)
+    return five_point_laplace(points, step_size)[0][0]
 
 # print energy_density(0.8, 1, 1, 1)
 
@@ -158,7 +158,27 @@ def energy_density_on_line(k, x0, y0, z0, axis, end):
             points_y.append(points_z)
         points.append(points_y)
 
+    return five_point_laplace(points, step_size)[0][0]
+
+def energy_density_volume(k, x0, x1, y0, y1, z0, z1):
+    step_size = 0.02
+
+    xintervals = int(math.ceil((x1 - x0)/step_size))
+    yintervals = int(math.ceil((y1 - y0)/step_size))
+    zintervals = int(math.ceil((z1 - z0)/step_size))
+
+    points = []
+    for a in range(-2, xintervals + 2, 1):
+        points_y = []
+        for b in range(-2, yintervals + 2, 1):
+            points_z = []
+            for c in range(-2, zintervals + 2, 1):
+                points_z.append(calc_phi_squared(k, float(x0 + a * step_size), float(y0 + b * step_size), float(z0 + c * step_size)))
+            points_y.append(points_z)
+        points.append(points_y)
+
     return five_point_laplace(points, step_size)
+
 
 
 
@@ -166,4 +186,6 @@ def energy_density_on_line(k, x0, y0, z0, axis, end):
 # print energy_density_on_line(0.8, 0, 0.5, 0, 'y', 2.5)
 # print energy_density_on_line(0.8, 0, 0, 0.5, 'z', 2.5)
 
-print energy_density_on_line(0.8, 4, 0, 0, 'x', 5)
+# print energy_density_on_line(0.8, 4, 0, 0, 'x', 5)
+
+print energy_density_volume(0.8, 0.5, 0.6, 0.5, 0.6, 0.5, 0.6)
