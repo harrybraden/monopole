@@ -14,7 +14,7 @@ stencil = array([[z, z, o, z, z], [z,z,s,z,z], [o,s,a,s,o],[z,z,s,z,z], [z,z,o,z
 def five_point_laplace(phi, step_size):
     l = convolve(phi, stencil, mode='valid') * float((1.0/step_size)**2)
 
-    return map(lambda li: li[0][0],l)
+    return l
 
 #
 #
