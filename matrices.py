@@ -2,6 +2,7 @@
 from numpy import complex, complex64, mat, dot, trace, pi, sqrt
 from mpmath import ellipk, ellipe
 import cmath
+from cmath import exp
 from numpy.linalg import inv
 import time
 

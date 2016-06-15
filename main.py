@@ -98,15 +98,33 @@ def calc_phi_squared(k, x1, x2, x3):
     # t3 = time.time()
     # print "abel: " + str(t3-t2)
     mu = calc_mu(k, x1, x2, x3, zeta, abel)
-    # t4 = time.time()
+    t4 = time.time()
     # print "mu: " + str(t4-t3)
 
     result =  matrices.HIGGSTRACE(map(lambda z:complex(z), zeta), mu, [x1, x2, x3], k)
-    # t5 = time.time()
-    # print "Higgs: " + str(t5-t4)
+    t5 = time.time()
+    print "Higgs: " + str(t5-t4)
     # print "Total: " + str(t5-t0)
     return result.real
 
+def test_mu(k, x1, x2, x3):
+    zeta = calc_zeta(k ,x1, x2, x3)
+    eta = calc_eta(k, x1, x2, x3)
+    abel = calc_abel(k, zeta, eta)
+    return calc_mu( k, x1, x2, x3, zeta, abel)
+
+# for i in range(0, 20, 1):
+#     print test_mu(0.8, 0.5+i*0.05, 0, 0)
+
+
+print "%.8f"%  calc_phi_squared(0.8 , 1 , 0.5 , 0.04)
+
+
+
+# fo = open(os.path.expanduser("~/Desktop/numerical monopoles/hwb_testhiggs"), 'w' )
+# for i in range(0, 400, 1):
+#     fo.write("%4.2f %15.9f\n"% ( (float(2*i) +2)/100, calc_phi_squared(0.8 ,  (float(2*i) +2)/100, 0.05, 0.05 )    ))
+# fo.close()
 
 
 def energy_density(k, x1, x2, x3):
@@ -124,7 +142,15 @@ def energy_density(k, x1, x2, x3):
 
     return five_point_laplace(points, step_size)[0][0]
 
-# print energy_density(0.8, 1, 1, 1)
+# for i in range(0, 20, 1):
+#     print energy_density(0.8, (float(2*i) +90)/100 , 0, 0)
+
+# print energy_density(0.8, .995 , 0.00, 0.0)[0]
+
+# print energy_density(0.8, .995 , 0.0, 0.0)[0]
+
+# print energy_density(0.8, 0, .01 , 0)
+# print energy_density(0.8, 0, 0, .01)
 
 def energy_density_on_line(k, x0, y0, z0, axis, end):
     if (axis not in ['x','y','z']):
@@ -141,7 +167,7 @@ def energy_density_on_line(k, x0, y0, z0, axis, end):
 
 
     points = []
-    for a in range(0, intervals, 1):
+    for a in range(-2, intervals + 2, 1):
         points_y = []
         for b in range(-2, 3, 1):
             points_z = []
@@ -181,10 +207,17 @@ def energy_density_volume(k, x0, x1, y0, y1, z0, z1):
 
 
 
+# fo = open(os.path.expanduser("~/Desktop/numerical monopoles/hwb_zlaplaceR"), 'w' )
+# ed = energy_density_on_line(0.8, 0, 0, .01, 'z', 4.01)
+# for i in range(0, len(ed), 1):
+#     fo.write("%4.3f %15.9f\n"% ( 0.01 + (4.01-0.01)*(float(i)/(len(ed)-1)), ed[i]))
+# fo.close()
 
-# print energy_density_on_line(0.8, 0.5, 0, 0, 'x', 2.5)
-# print energy_density_on_line(0.8, 0, 0.5, 0, 'y', 2.5)
-# print energy_density_on_line(0.8, 0, 0, 0.5, 'z', 2.5)
+# fo = open(os.path.expanduser("~/Desktop/hwb_xlaplaceR"), 'w' )
+# ed = energy_density_on_line(0.8, .005, 0, 0, 'x', 4.005)
+# for i in range(0, len(ed), 1):
+#     fo.write("%4.3f %15.9f\n"% ( 0.005 + (4.005-0.005)*(float(i)/(len(ed)-1)), ed[i]))
+# fo.close()
 
 # print energy_density_on_line(0.8, 4, 0, 0, 'x', 5)
 
