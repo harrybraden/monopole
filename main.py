@@ -7,6 +7,9 @@ import matrices
 import os
 from laplace import five_point_laplace
 import math
+from python_expressions.dphi1 import dphi1
+from python_expressions.dphi2 import dphi2
+from python_expressions.dphi3 import dphi3
 
 
 
@@ -113,11 +116,20 @@ def test_mu(k, x1, x2, x3):
     abel = calc_abel(k, zeta, eta)
     return calc_mu( k, x1, x2, x3, zeta, abel)
 
+def test_derivatives(k, x1, x2, x3):
+    zeta = calc_zeta(k ,x1, x2, x3)
+    eta = calc_eta(k, x1, x2, x3)
+    abel = calc_abel(k, zeta, eta)
+    mu = calc_mu(k, x1, x2, x3, zeta, abel)
+    return dphi1(zeta, mu, [x1, x2, x3], k), dphi2(zeta, mu, [x1, x2, x3], k), dphi3(zeta, mu, [x1, x2, x3], k)
+
+print test_derivatives(0.8,  0.3, 0.0, 0.0)
+
 # for i in range(0, 20, 1):
 #     print test_mu(0.8, 0.5+i*0.05, 0, 0)
 
 
-print "%.8f"%  calc_phi_squared(0.8 , 1 , 0.5 , 0.04)
+#print "%.8f"%  calc_phi_squared(0.8 , 1 , 0.5 , 0.04)
 
 
 
@@ -221,4 +233,4 @@ def energy_density_volume(k, x0, x1, y0, y1, z0, z1):
 
 # print energy_density_on_line(0.8, 4, 0, 0, 'x', 5)
 
-print energy_density_volume(0.8, 0.5, 0.6, 0.5, 0.6, 0.5, 0.6)
+# print energy_density_volume(0.8, 0.5, 0.6, 0.5, 0.6, 0.5, 0.6)
