@@ -7,7 +7,7 @@ from numpy.linalg import inv
 import time
 
 
-def HIGGSTRACE(zeta, mu, x, k) :
+def higgstrace(zeta, mu, x, k) :
 
     K = complex64(ellipk(k**2))
 
@@ -55,10 +55,10 @@ def HIGGSTRACE(zeta, mu, x, k) :
     return -0.5 * trace(dot(M1, M1))
 
 
-# x = [.300, 0., 0.]
-# zeta = [.629-.777*complex(0,1), .629+.777*complex(0,1), -.629+.777*complex(0,1), -.629-.777*complex(0,1)]
-# mu = [-.129+3.927*complex(0,1), .129+3.927*complex(0,1), .129+5.498*complex(0,1), -.129+5.498*complex(0,1)]
-# k = .800
+    # x = [.300, 0., 0.]
+    # zeta = [.629-.777*complex(0,1), .629+.777*complex(0,1), -.629+.777*complex(0,1), -.629-.777*complex(0,1)]
+    # mu = [-.129+3.927*complex(0,1), .129+3.927*complex(0,1), .129+5.498*complex(0,1), -.129+5.498*complex(0,1)]
+    # k = .800
 
 
-# print HIGGSTRACE(zeta, mu, x, k)
+    # print HIGGSTRACE(zeta, mu, x, k)
