@@ -5,17 +5,17 @@ import mpmath
 import time
 from generated_matrices.higgstrace import higgstrace
 from generated_matrices.ddphi import ddphi1, ddphi2, ddphi3
-# from generated_matrices.dphi1 import dphi1
-# from generated_matrices.dphi2 import dphi2
-# from generated_matrices.dphi3 import dphi3
-# from generated_matrices.egram import egram
-# from generated_matrices.ephi import ephi
-# from generated_matrices.dgram1 import dgram1
-# from generated_matrices.dgram2 import dgram2
-# from generated_matrices.dgram3 import dgram3
-# from generated_matrices.ddgram1 import ddgram1
-# from generated_matrices.ddgram2 import ddgram2
-# from generated_matrices.ddgram3 import ddgram3
+from generated_matrices.dphi1 import dphi1
+from generated_matrices.dphi2 import dphi2
+from generated_matrices.dphi3 import dphi3
+from generated_matrices.egram import egram
+from generated_matrices.ephi import ephi
+from generated_matrices.dgram1 import dgram1
+from generated_matrices.dgram2 import dgram2
+from generated_matrices.dgram3 import dgram3
+from generated_matrices.ddgram1 import ddgram1
+from generated_matrices.ddgram2 import ddgram2
+from generated_matrices.ddgram3 import ddgram3
 import os
 from laplace import five_point_laplace
 import math
