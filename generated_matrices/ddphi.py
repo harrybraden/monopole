@@ -1,15 +1,15 @@
-import ddphi111
-import ddphi112
-import ddphi121
-import ddphi122
-import ddphi211
-import ddphi212
-import ddphi221
-import ddphi222
-import ddphi311
-import ddphi312
-import ddphi321
-import ddphi322
+from ddphi111 import ddphi111
+from ddphi112 import ddphi112
+from ddphi121 import ddphi121
+from ddphi122 import ddphi122
+from ddphi211 import ddphi211
+from ddphi212 import ddphi212
+from ddphi221 import ddphi221
+from ddphi222 import ddphi222
+from ddphi311 import ddphi311
+from ddphi312 import ddphi312
+from ddphi321 import ddphi321
+from ddphi322 import ddphi322
 from numpy import mat
 
 def ddphi1(zeta, mu, x, k):

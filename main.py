@@ -1,7 +1,6 @@
 __author__ = 'hwb'
 from mpmath import ellipk, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
-from numpy import roots, complex64, conj, pi, sqrt, sum
-import mpmath
+from numpy import roots, complex64, conj, pi, sqrt, sum, matmul, trace, linalg
 import time
 from generated_matrices.higgstrace import higgstrace
 from generated_matrices.ddphi import ddphi1, ddphi2, ddphi3
@@ -229,8 +228,49 @@ def energy_density_volume(k, x0, x1, y0, y1, z0, z1):
 
 # print energy_density_volume(0.8, 0.5, 0.6, 0.5, 0.6, 0.5, 0.6)
 
+def calc_something(k, x1, x2, x3):
 
+    zeta = calc_zeta(k ,x1, x2, x3)
+    eta = calc_eta(k, x1, x2, x3)
+    abel = calc_abel(k, zeta, eta)
+    mu = calc_mu(k, x1, x2, x3, zeta, abel)
 
+    inv_gram = linalg.inv(egram(zeta, mu, [x1, x2, x3], k))
+
+    ed1 = trace(matmul(matmul(ddphi1(zeta, mu, [x1, x2, x3], k), inv_gram) \
+                        -2* matmul(matmul(dphi1(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram1(zeta, mu, [x1, x2, x3], k), inv_gram)) \
+                        + matmul(ephi(zeta, mu, [x1, x2, x3], k),
+                                 (2* matmul(matmul(inv_gram, dgram1(zeta, mu, [x1, x2, x3], k)), matmul(inv_gram, dgram1(zeta, mu, [x1, x2, x3], k)), inv_gram) \
+                                  - matmul(matmul(inv_gram, ddgram1(zeta, mu, [x1, x2, x3], k)), inv_gram) )),
+                               matmul(ephi(zeta, mu, [x1, x2, x3], k),inv_gram))) \
+           + trace( matmul(matmul(dphi1(zeta, mu, [x1, x2, x3], k), inv_gram) - matmul(matmul(ephi(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram1(zeta, mu, [x1, x2, x3], k), inv_gram)),
+                           matmul(dphi1(zeta, mu, [x1, x2, x3], k), inv_gram) - matmul(matmul(ephi(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram1(zeta, mu, [x1, x2, x3], k), inv_gram))))
+
+    ed2 = trace(matmul(matmul(ddphi2(zeta, mu, [x1, x2, x3], k), inv_gram) \
+                       -2* matmul(matmul(dphi2(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram2(zeta, mu, [x1, x2, x3], k), inv_gram)) \
+                       + matmul(ephi(zeta, mu, [x1, x2, x3], k),
+                                (2* matmul(matmul(inv_gram, dgram2(zeta, mu, [x1, x2, x3], k)), matmul(inv_gram, dgram2(zeta, mu, [x1, x2, x3], k)), inv_gram) \
+                                 - matmul(matmul(inv_gram, ddgram2(zeta, mu, [x1, x2, x3], k)), inv_gram) )),
+                       matmul(ephi(zeta, mu, [x1, x2, x3], k),inv_gram))) \
+          + trace( matmul(matmul(dphi2(zeta, mu, [x1, x2, x3], k), inv_gram) - matmul(matmul(ephi(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram2(zeta, mu, [x1, x2, x3], k), inv_gram)),
+                          matmul(dphi2(zeta, mu, [x1, x2, x3], k), inv_gram) - matmul(matmul(ephi(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram2(zeta, mu, [x1, x2, x3], k), inv_gram))))
+
+    ed3 = trace(matmul(matmul(ddphi3(zeta, mu, [x1, x2, x3], k), inv_gram) \
+                       -2* matmul(matmul(dphi3(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram3(zeta, mu, [x1, x2, x3], k), inv_gram)) \
+                       + matmul(ephi(zeta, mu, [x1, x2, x3], k),
+                                (2* matmul(matmul(inv_gram, dgram3(zeta, mu, [x1, x2, x3], k)), matmul(inv_gram, dgram3(zeta, mu, [x1, x2, x3], k)), inv_gram) \
+                                 - matmul(matmul(inv_gram, ddgram3(zeta, mu, [x1, x2, x3], k)), inv_gram) )),
+                       matmul(ephi(zeta, mu, [x1, x2, x3], k),inv_gram))) \
+          + trace( matmul(matmul(dphi3(zeta, mu, [x1, x2, x3], k), inv_gram) - matmul(matmul(ephi(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram3(zeta, mu, [x1, x2, x3], k), inv_gram)),
+                          matmul(dphi3(zeta, mu, [x1, x2, x3], k), inv_gram) - matmul(matmul(ephi(zeta, mu, [x1, x2, x3], k), inv_gram), matmul(dgram3(zeta, mu, [x1, x2, x3], k), inv_gram))))
+
+    return ed1 + ed2 + ed3
+
+k = 0.7
+x1 = 0
+x2 = 0
+x3 = 0.9
+print calc_something(k ,x1, x2, x3)
 
 
 
