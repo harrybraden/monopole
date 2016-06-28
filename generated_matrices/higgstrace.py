@@ -53,6 +53,7 @@ def higgstrace(zeta, mu, x, k) :
     graminv = inv(gram)
     M1 = dot(higgsSum, graminv)
     return -0.5 * trace(dot(M1, M1))
+    #return gram
 
 
     # x = [.300, 0., 0.]
