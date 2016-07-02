@@ -163,40 +163,84 @@ def test(k, x1, x2, x3):
     t3 = time.time()
 
     t4 = time.time()
+
     higgs = ephi(zeta, mu, [x1, x2, x3], k)
 
     t5 = time.time()
 
-    higgs1 = phis(zeta, mu, [x1, x2, x3], k)
+    higgss = phis(zeta, mu, [x1, x2, x3], k)
 
     t6 = time.time()
 
-
-    DH3 = dphi3(zeta, mu, [x1, x2, x3], k)
+    DG1 = dgram1(zeta, mu, x, k)
 
     t7 = time.time()
+
+    DGS1 = dgrams1(zeta, mu, DM, DZ, x, k)
+
+    t8 = time.time()
+
+    DG2 = dgram2(zeta, mu, x, k)
+
+    t9 = time.time()
+
+    DGS2 = dgrams2(zeta, mu, DM, DZ, x, k)
+
+    t10 = time.time()
+
+    DG3 = dgram3(zeta, mu, x, k)
+
+    t11 = time.time()
+
+    DGS3 = dgrams3(zeta, mu, DM, DZ, x, k)
+
+    t12 = time.time()
+
+    DH1 = dphi1(zeta, mu, [x1, x2, x3], k)
+
+    t13 = time.time()
 
     DHS1 = mat([[ dphis111(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis112(zeta, mu, DM, DZ, [x1, x2, x3], k)],
              [ dphis121(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis122(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
+    t14 = time.time()
+
+    DH2 = dphi2(zeta, mu, [x1, x2, x3], k)
+
+    t15 = time.time()
+
     DHS2 = mat([[ dphis211(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis212(zeta, mu, DM, DZ, [x1, x2, x3], k)],
              [ dphis221(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis222(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    t8 = time.time()
+    t16 = time.time()
+
+    DH3 = dphi3(zeta, mu, [x1, x2, x3], k)
+
+    t17 = time.time()
 
     DHS3 = mat([[ dphis311(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis312(zeta, mu, DM, DZ, [x1, x2, x3], k)],
                 [ dphis321(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis322(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    t9 = time.time()
+    t18 = time.time()
 
-    # print str(t1-t0)
-    # print str(t3-t2)
-    # print str(t5-t4)
-    # print str(t6-t5)
+    print str(t1-t0)
+    print str(t3-t2)
+    print str(t5-t4)
+    print str(t6-t5)
     print str(t7-t6)
+    print str(t8-t7)
     print str(t9-t8)
+    print str(t10-t9)
+    print str(t11-t10)
+    print str(t12-t11)
+    print str(t13-t12)
+    print str(t14-t13)
+    print str(t15-t14)
+    print str(t16-t15)
+    print str(t17-t16)
+    print str(t18-t17)
 
-    return DH3, DHS3
+    return DG1, DGS1
 
 
 
