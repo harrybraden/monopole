@@ -3,7 +3,7 @@ from mpmath import ellipk, ellipe
 from cmath import exp
 
 
-def dexp(x, k):
+def ddexp(x, k):
 
     K = complex64(ellipk(k**2))
 
