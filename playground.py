@@ -1,57 +1,61 @@
 __author__ = 'hwb'
-from numpy import roots, complex, complex64, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix
+from numpy import roots, complex, complex64, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
 from numpy import roots, complex64, conj, pi, sqrt, sum, trace, linalg, matmul, array
 import time
 import math
-# from generated_matrices.egram import egram
-# from generated_matrices.ephi import ephi
-# from generated_matrices.dgram1 import dgram1
-# from generated_matrices.dgram2 import dgram2
-# from generated_matrices.dgram3 import dgram3
-from generated_matrices.ddgram1 import ddgram1
-from generated_matrices.ddgram2 import ddgram2
-from generated_matrices.ddgram3 import ddgram3
-# from generated_matrices.dphi1 import dphi1
-# from generated_matrices.dphi2 import dphi2
-# from generated_matrices.dphi3 import dphi3
-#
+
+
 from python_expressions.dexp import dexp
 from python_expressions.dmus import dmus
 from python_expressions.dzetas import dzetas
 from python_expressions.ddmus import ddmus
 from python_expressions.ddzetas import ddzetas
-# from python_expressions.grams import grams
-# from python_expressions.dgrams1 import dgrams1
-# from python_expressions.dgrams2 import dgrams2
-# from python_expressions.dgrams3 import dgrams3
-# from python_expressions.phis import phis
-# from python_expressions.dphis111 import dphis111
-# from python_expressions.dphis112 import dphis112
+
+from python_expressions.grams import grams
+from python_expressions.dgrams1 import dgrams1
+from python_expressions.dgrams2 import dgrams2
+from python_expressions.dgrams3 import dgrams3
+
+from python_expressions.phis import phis
+from python_expressions.dphis111 import dphis111
+from python_expressions.dphis112 import dphis112
 # from python_expressions.dphis121 import dphis121
-# from python_expressions.dphis122 import dphis122
-# from python_expressions.dphis211 import dphis211
-# from python_expressions.dphis212 import dphis212
-# from python_expressions.dphis221 import dphis221
-# from python_expressions.dphis222 import dphis222
-# from python_expressions.dphis311 import dphis311
-# from python_expressions.dphis312 import dphis312
+from python_expressions.dphis122 import dphis122
+from python_expressions.dphis211 import dphis211
+from python_expressions.dphis212 import dphis212
+from python_expressions.dphis221 import dphis221
+from python_expressions.dphis222 import dphis222
+from python_expressions.dphis311 import dphis311
+from python_expressions.dphis312 import dphis312
 # from python_expressions.dphis321 import dphis321
-# from python_expressions.dphis322 import dphis322
+from python_expressions.dphis322 import dphis322
 from python_expressions.ddgrams111 import ddgrams111
 from python_expressions.ddgrams112 import ddgrams112
 from python_expressions.ddgrams121 import ddgrams121
 from python_expressions.ddgrams122 import ddgrams122
 from python_expressions.ddgrams211 import ddgrams211
 from python_expressions.ddgrams212 import ddgrams212
-from python_expressions.ddgrams221 import ddgrams221
+# from python_expressions.ddgrams221 import ddgrams221
 from python_expressions.ddgrams222 import ddgrams222
 from python_expressions.ddgrams311 import ddgrams311
 from python_expressions.ddgrams312 import ddgrams312
-from python_expressions.ddgrams321 import ddgrams321
+# from python_expressions.ddgrams321 import ddgrams321
 from python_expressions.ddgrams322 import ddgrams322
+from python_expressions.ddphis111 import ddphis111
+from python_expressions.ddphis112 import ddphis112
+# from python_expressions.ddphis121 import ddphis121
+from python_expressions.ddphis122 import ddphis122
+from python_expressions.ddphis211 import ddphis211
+from python_expressions.ddphis212 import ddphis212
+# from python_expressions.ddphis221 import ddphis221
+from python_expressions.ddphis222 import ddphis222
+from python_expressions.ddphis311 import ddphis311
+from python_expressions.ddphis312 import ddphis312
+# from python_expressions.ddphis321 import ddphis321
+from python_expressions.ddphis322 import ddphis322
 
 def quartic_roots(k, x1, x2, x3):
     K = complex64(ellipk(k**2))
@@ -164,147 +168,116 @@ def test(k, x1, x2, x3):
     DDM = ddmus(zeta, x, k)
     DDZ = ddzetas(zeta, x,k)
 
-    # t0 = time.time()
-    #
-    # GNUM = egram(zeta, mu, [x1, x2, x3], k)
-    #
-    # t1 = time.time()
-    #
-    # # graminv = matrix(GNUM).I
-    #
-    # t2 = time.time()
-    #
-    # GNUM1 = grams(zeta, mu, [x1, x2, x3], k)
-    #
-    # t3 = time.time()
-    #
-    # t4 = time.time()
-    #
-    # higgs = ephi(zeta, mu, [x1, x2, x3], k)
-    #
-    # t5 = time.time()
-    #
-    # higgss = phis(zeta, mu, [x1, x2, x3], k)
-    #
-    # t6 = time.time()
-    #
-    # DG1 = dgram1(zeta, mu, x, k)
-    #
-    # t7 = time.time()
-    #
-    # DGS1 = dgrams1(zeta, mu, DM, DZ, x, k)
-    #
-    # t8 = time.time()
-    #
-    # DG2 = dgram2(zeta, mu, x, k)
-    #
-    # t9 = time.time()
-    #
-    # DGS2 = dgrams2(zeta, mu, DM, DZ, x, k)
-    #
-    # t10 = time.time()
-    #
-    # DG3 = dgram3(zeta, mu, x, k)
-    #
-    # t11 = time.time()
-    #
-    # DGS3 = dgrams3(zeta, mu, DM, DZ, x, k)
-    #
-    # t12 = time.time()
-    #
-    # DH1 = dphi1(zeta, mu, [x1, x2, x3], k)
-    #
-    # t13 = time.time()
-    #
+    GNUM = grams(zeta, mu, [x1, x2, x3], k)
+
+    inv_gram = matrix(GNUM).I
+
+    higgs = phis(zeta, mu, [x1, x2, x3], k)
+
+    DGS1 = dgrams1(zeta, mu, DM, DZ, x, k)
+
+    DGS2 = dgrams2(zeta, mu, DM, DZ, x, k)
+
+    DGS3 = dgrams3(zeta, mu, DM, DZ, x, k)
+
+
+    # Using the hermiticity properties its faster to evaluate the matrix entries just once and so if we evaluate
+    # the *12 element the *21 is minus the conjugate of this
     # DHS1 = mat([[ dphis111(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis112(zeta, mu, DM, DZ, [x1, x2, x3], k)],
-    #          [ dphis121(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis122(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
-    #
-    # t14 = time.time()
-    #
-    # DH2 = dphi2(zeta, mu, [x1, x2, x3], k)
-    #
-    # t15 = time.time()
-    #
-    # DHS2 = mat([[ dphis211(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis212(zeta, mu, DM, DZ, [x1, x2, x3], k)],
-    #          [ dphis221(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis222(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
-    #
-    # t16 = time.time()
-    #
-    # DH3 = dphi3(zeta, mu, [x1, x2, x3], k)
-    #
-    # t17 = time.time()
-    #
-    # DHS3 = mat([[ dphis311(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis312(zeta, mu, DM, DZ, [x1, x2, x3], k)],
-    #             [ dphis321(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis322(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
-    #
-    # t18 = time.time()
-    #
-    # print str(t1-t0)
-    # print str(t3-t2)
-    # print str(t5-t4)
-    # print str(t6-t5)
-    # print str(t7-t6)
-    # print str(t8-t7)
-    # print str(t9-t8)
-    # print str(t10-t9)
-    # print str(t11-t10)
-    # print str(t12-t11)
-    # print str(t13-t12)
-    # print str(t14-t13)
-    # print str(t15-t14)
-    # print str(t16-t15)
-    # print str(t17-t16)
-    # print str(t18-t17)
+    #            [ dphis121(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis122(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    t20 = time.time()
+    DH112 = dphis112(zeta, mu, DM, DZ, [x1, x2, x3], k)
 
-    DDG1 = ddgram1(zeta, mu, x, k)
+    DHS1 = mat([[ dphis111(zeta, mu, DM, DZ, [x1, x2, x3], k), DH112   ],
+                 [ -conj(DH112), dphis122(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    t21 = time.time()
+    DH212 = dphis212(zeta, mu, DM, DZ, [x1, x2, x3], k)
 
-    DDGS1 = mat([[ ddgrams111(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), ddgrams112(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)],
-                 [ ddgrams121(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), ddgrams122(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
+    DHS2 = mat([[ dphis211(zeta, mu, DM, DZ, [x1, x2, x3], k), DH212   ],
+                [ -conj(DH212), dphis222(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    t22 = time.time()
+    DH312 = dphis312(zeta, mu, DM, DZ, [x1, x2, x3], k)
 
-    DDG2 = ddgram2(zeta, mu, x, k)
+    DHS3 = mat([[ dphis311(zeta, mu, DM, DZ, [x1, x2, x3], k), DH312   ],
+                [ -conj(DH312), dphis322(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    t23 = time.time()
+    DDGS112 = ddgrams112(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
 
-    DDGS2 = mat([[ ddgrams211(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), ddgrams212(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)],
-                 [ ddgrams221(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), ddgrams222(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
+    DDGS1 = mat([[ ddgrams111(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS112 ],
+                 [ -conj(DDGS112), ddgrams122(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
 
-    t24 = time.time()
+    DDGS212 = ddgrams212(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
 
-    DDG3 = ddgram3(zeta, mu, x, k)
+    DDGS2 = mat([[ ddgrams211(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS212 ],
+                 [ -conj(DDGS212) , ddgrams222(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
 
-    t25 = time.time()
+    DDGS312 = ddgrams312(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
 
-    DDGS3 = mat([[ ddgrams311(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), ddgrams312(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)],
-                 [ ddgrams321(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), ddgrams322(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
+    DDGS3 = mat([[ ddgrams311(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS312 ],
+                 [ -conj(DDGS312), ddgrams322(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
 
-    t26 = time.time()
+    DDHS111 = ddphis111(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    DDHS112 = ddphis112(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    # DDHS121 = ddphis121(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    DDHS122 = ddphis122(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
 
-    print str(t21-t20)
-    print str(t22-t21)
-    print str(t23-t22)
-    print str(t24-t23)
-    print str(t25-t24)
-    print str(t26-t25)
+    DDHS1 = mat( [[DDHS111, DDHS112], [ -conj(DDHS112),DDHS122]])
 
-    return DDG3, DDGS3
+    DDHS211 = ddphis211(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    DDHS212 = ddphis212(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    # DDHS221 = ddphis221(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    DDHS222 = ddphis222(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+
+    DDHS2 = mat( [[DDHS211, DDHS212], [-conj(DDHS212),DDHS222]])
+
+    DDHS311 = ddphis311(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    DDHS312 = ddphis312(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    # DDHS321 = ddphis321(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+    DDHS322 = ddphis322(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+
+    DDHS3 = mat( [[DDHS311, DDHS312], [-conj(DDHS312),DDHS322]])
+
+    ed1 = trace(matmul( matmul(DDHS1, inv_gram) -2* matmul( matmul(DHS1 , inv_gram), matmul(DGS1, inv_gram)) \
+                        + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS1), matmul(inv_gram, DGS1)), inv_gram)  - matmul(matmul(inv_gram, DDGS1), inv_gram)),
+                        matmul(higgs,inv_gram)) ) \
+          + trace( matmul(matmul(DHS1, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS1, inv_gram)),
+                          matmul(DHS1, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS1, inv_gram))))
+
+    ed2 = trace(matmul( matmul(DDHS2, inv_gram) -2* matmul( matmul(DHS2 , inv_gram), matmul(DGS2, inv_gram)) \
+                        + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS2), matmul(inv_gram, DGS2)), inv_gram)  - matmul(matmul(inv_gram, DDGS2), inv_gram)),
+                        matmul(higgs,inv_gram)) ) \
+          + trace( matmul(matmul(DHS2, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS2, inv_gram)),
+                          matmul(DHS2, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS2, inv_gram))))
+
+    ed3 = trace(matmul( matmul(DDHS3, inv_gram) -2* matmul( matmul(DHS3 , inv_gram), matmul(DGS3, inv_gram)) \
+                        + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS3), matmul(inv_gram, DGS3)), inv_gram)  - matmul(matmul(inv_gram, DDGS3), inv_gram)),
+                        matmul(higgs,inv_gram)) ) \
+          + trace( matmul(matmul(DHS3, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS3, inv_gram)),
+                          matmul(DHS3, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS3, inv_gram))))
+
+    energy_density = -(ed1 + ed2 + ed3).real
+
+    return energy_density
 
 
 
 
 
 
-k = 0.8
+k = 0.2
 
-x1 = 0.6
+x1 = 3.2
 x2 = 1.3
-x3 = 2.0
+x3 = 1.4
 
-print test(k , x1, x2, x3)
+t1 = time.time()
+A  = test(k , x1, x2, x3)
+t2 = time.time()
+
+print A
+
+print str(t2-t1)
+
+# print test(k , x1, x2, x3)
 
 
