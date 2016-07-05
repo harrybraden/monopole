@@ -1,4 +1,27 @@
 __author__ = 'hwb'
+#  This file will calculate the energy_density for a point (x1, x2, x3) of space and a parameter k (between 0 and 1)
+#
+#  Given a point x we associate to this four points P=(zeta, eta) on an elliptic curve. The four zeta values for these are determined by the roots of the quartic describing the curve
+#  quartic_roots(k, x1, x2, x3) but they are ordered by properties coming from the real structure order_roots(roots); then
+#  calc_zeta(k, x1, x2, x3)= order_roots(quartic_roots(k, x1, x2, x3))
+#  The second coordinate eta is given by calc_eta
+#
+#  We need to calculate the Abel image of P. This will be done in calc_abel. To correctly identify this point with the correct sheet we will calculate the eta value of the Abel image by
+#  calc_eta_by_theta and if this agrees accept it, and if not shift by the half period to the correct sheet. This is done by abel_select and calc_abel returns the correct Abel images
+#  for each of the points.
+#
+#  There is one transcendental function mu for each of the four points P given by calc_mu(k, x1, x2, x3, zeta, abel).
+#
+#  All functions are then functions of (k, x1, x2, x3) and zeta_i, eta_i, mu_i (i=1..4).
+#
+#  The energy density is one such function and we have the gram matrix (grams) and higgs field phis, both 2x2 matrices and their first and second derivatives dgrams, ddgrams,
+#  dphis, ddphis
+#
+#
+#
+#
+#
+
 from numpy import roots, complex, complex64, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj
 from cmath import exp
 import time
