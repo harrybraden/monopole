@@ -280,20 +280,53 @@ def energy_density(k, x1, x2, x3):
 
     return -(ed1 + ed2 + ed3).real
 
-# k = 0.8
-#
-# x1 = 0.1
-# x2 = 0.0
-# x3 = 0.0
-#
-# t3 = time.time()
-# A  = energy_density(k , x1, x2, x3)
-# t4 = time.time()
-#
-# print A
-#
-# print str(t4-t3)
-#
+k = 0.8
+
+x1 = 0.1
+x2 = 0.0
+x3 = 0.0
+
+t3 = time.time()
+A  = energy_density(k , x1, x2, x3)
+t4 = time.time()
+
+print A
+
+print str(t4-t3)
+
 # # print test(k , x1, x2, x3)
 
+def test_timing(k, x1, x2, x3):
 
+    zeta = calc_zeta(k ,x1, x2, x3)
+    eta = calc_eta(k, x1, x2, x3)
+    abel = calc_abel(k, zeta, eta)
+    mu = calc_mu(k, x1, x2, x3, zeta, abel)
+    x=[x1,x2,x3]
+
+    K = complex64(ellipk(k**2))
+    xp = x[0]+complex(0,1)*x[1]
+    xm = x[0]-complex(0,1)*x[1]
+
+    # t1 = time.time()
+    DM = dmus(zeta, x, k)
+    DZ = dzetas(zeta, x,k)
+    DDM = ddmus(zeta, x, k)
+    DDZ = ddzetas(zeta, x,k)
+    # t2 =  time.time()
+
+    # A = ddphis111(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+
+    # t3= time.time()
+
+    # print str(t2-t1)
+    # print str(t3-t2)
+
+    return ddphis111(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+
+# t4 = time.time()
+# A  = test_timing(.8, 1.5, 0.0, 0.0)
+# t5 = time.time()
+#
+# print A
+# print str(t5-t4)

@@ -149,7 +149,7 @@ def higgs_squared(k, x1, x2, x3):
 
 
 
-fo = open(os.path.expanduser("~/Desktop/numerical monopoles/hwb_testhiggs_2"), 'w' )
-for i in range(0, 400, 1):
-    fo.write("%4.2f %15.9f\n"% ( (float(2*i) +2)/100, higgs_squared(0.8 ,  0.0, (float(2*i) +2)/100, 0.00 )    ))
-fo.close()
+# fo = open(os.path.expanduser("~/Desktop/numerical monopoles/hwb_testhiggs_2"), 'w' )
+# for i in range(0, 400, 1):
+#     fo.write("%4.2f %15.9f\n"% ( (float(2*i) +2)/100, higgs_squared(0.8 ,  0.0, (float(2*i) +2)/100, 0.00 )    ))
+# fo.close()
