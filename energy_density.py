@@ -280,21 +280,21 @@ def energy_density(k, x1, x2, x3):
 
     return -(ed1 + ed2 + ed3).real
 
-k = 0.8
-
-x1 = 0.1
-x2 = 0.0
-x3 = 0.0
-
-t3 = time.time()
-A  = energy_density(k , x1, x2, x3)
-t4 = time.time()
-
-print A
-
-print str(t4-t3)
-
-# # print test(k , x1, x2, x3)
+# k = 0.8
+#
+# x1 = 1.5
+# x2 = 1.9
+# x3 = 0.5
+#
+# t3 = time.time()
+# A  = energy_density(k , x1, x2, x3)
+# t4 = time.time()
+#
+# print A
+#
+# print str(t4-t3)
+#
+# print test(k , x1, x2, x3)
 
 def test_timing(k, x1, x2, x3):
 
@@ -325,7 +325,7 @@ def test_timing(k, x1, x2, x3):
     return ddphis111(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
 
 # t4 = time.time()
-# A  = test_timing(.8, 1.5, 0.0, 0.0)
+# A  = energy_density(.8, 1.5, 0.7, 0.3)
 # t5 = time.time()
 #
 # print A
