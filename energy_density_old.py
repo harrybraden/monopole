@@ -80,13 +80,13 @@ from python_expressions.ddphis312 import ddphis312
 from python_expressions.ddphis322 import ddphis322
 
 def quartic_roots(k, x1, x2, x3):
-    K = complex64(ellipk(k**2))
+    K = complex128(ellipk(k**2))
 
-    e0 = complex64((x1*j - x2)**2 + .25 * K**2)
-    e1 = complex64(4*(x1*j-x2)*x3)
-    e2 = complex64(4*(x3**2) - 2 * (x1**2) - 2 * (x2**2) + (K**2) * (k**2 - 0.5))
-    e3 = complex64(4*x3*(x2 + j*x1))
-    e4 = complex64(x2**2 - x1**2 + 2*j*x1*x2 + 0.25*K**2)
+    e0 = complex128((x1*j - x2)**2 + .25 * K**2)
+    e1 = complex128(4*(x1*j-x2)*x3)
+    e2 = complex128(4*(x3**2) - 2 * (x1**2) - 2 * (x2**2) + (K**2) * (k**2 - 0.5))
+    e3 = complex128(4*x3*(x2 + j*x1))
+    e4 = complex128(x2**2 - x1**2 + 2*j*x1*x2 + 0.25*K**2)
 
     return roots([e4, e3, e2, e1, e0])
 

@@ -22,11 +22,11 @@ __author__ = 'hwb'
 #
 #
 
-from numpy import roots, complex, complex64, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj
+from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  matmul
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
-from numpy import roots, complex64, conj, pi, sqrt, sum, trace, linalg, matmul, array
+# from numpy import roots, complex64, conj, pi, sqrt, sum, trace, linalg, array
 import time
 import math
 
@@ -80,13 +80,13 @@ from modified_expressions.ddphis312 import ddphis312
 from modified_expressions.ddphis322 import ddphis322
 
 def quartic_roots(k, x1, x2, x3):
-    K = complex64(ellipk(k**2))
+    K = complex128(ellipk(k**2))
 
-    e0 = complex64((x1*j - x2)**2 + .25 * K**2)
-    e1 = complex64(4*(x1*j-x2)*x3)
-    e2 = complex64(4*(x3**2) - 2 * (x1**2) - 2 * (x2**2) + (K**2) * (k**2 - 0.5))
-    e3 = complex64(4*x3*(x2 + j*x1))
-    e4 = complex64(x2**2 - x1**2 + 2*j*x1*x2 + 0.25*K**2)
+    e0 = complex128((x1*j - x2)**2 + .25 * K**2)
+    e1 = complex128(4*(x1*j-x2)*x3)
+    e2 = complex128(4*(x3**2) - 2 * (x1**2) - 2 * (x2**2) + (K**2) * (k**2 - 0.5))
+    e3 = complex128(4*x3*(x2 + j*x1))
+    e4 = complex128(x2**2 - x1**2 + 2*j*x1*x2 + 0.25*K**2)
 
     return roots([e4, e3, e2, e1, e0])
 
@@ -278,7 +278,7 @@ def energy_density(k, x1, x2, x3):
 
     # energy_density = -(ed1 + ed2 + ed3).real
 
-    return -(ed1 + ed2 + ed3).real
+    return  -(ed1 + ed2 + ed3).real
 
 
 def test_timing(k, x1, x2, x3):
@@ -335,7 +335,7 @@ def test_timing(k, x1, x2, x3):
 # print str(t16-t15)
 #
 # t4 = time.time()
-# A  = energy_density_new(.8, 1.5, 0.7, 0.3)
+# A  = energy_density(.8, 1.5, 0.7, 0.3)
 # t5 = time.time()
 #
 # print A

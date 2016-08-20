@@ -15,7 +15,8 @@ __author__ = 'hwb'
 #  All functions are then functions of (k, x1, x2, x3) and zeta_i, eta_i, mu_i (i=1..4).
 #
 
-from numpy import roots, complex, complex64, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj
+from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj
+from math import *
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
@@ -24,17 +25,21 @@ import time
 import math
 import os
 
+
+
+
+
 from python_expressions.grams import grams
 from python_expressions.phis import phis
 
 def quartic_roots(k, x1, x2, x3):
-    K = complex64(ellipk(k**2))
+    K = complex128(ellipk(k**2))
 
-    e0 = complex64((x1*j - x2)**2 + .25 * K**2)
-    e1 = complex64(4*(x1*j-x2)*x3)
-    e2 = complex64(4*(x3**2) - 2 * (x1**2) - 2 * (x2**2) + (K**2) * (k**2 - 0.5))
-    e3 = complex64(4*x3*(x2 + j*x1))
-    e4 = complex64(x2**2 - x1**2 + 2*j*x1*x2 + 0.25*K**2)
+    e0 = complex128((x1*j - x2)**2 + .25 * K**2)
+    e1 = complex128(4*(x1*j-x2)*x3)
+    e2 = complex128(4*(x3**2) - 2 * (x1**2) - 2 * (x2**2) + (K**2) * (k**2 - 0.5))
+    e3 = complex128(4*x3*(x2 + j*x1))
+    e4 = complex128(x2**2 - x1**2 + 2*j*x1*x2 + 0.25*K**2)
 
     return roots([e4, e3, e2, e1, e0])
 
@@ -140,6 +145,68 @@ def higgs_squared(k, x1, x2, x3):
     return  -(trace(matmul( matmul(higgs, inv_gram),  matmul(higgs, inv_gram) )).real)/2
 
 
+def higgs_squared_on_xy_plane(k_value, x0, x1, y0, y1, partition_size):
+
+    x_step = (x1 - x0) / partition_size
+    y_step = (y1 - y0) / partition_size
+
+
+    points = []
+    last = 0
+    for k in range(0, partition_size):
+        for i in range(0, partition_size):
+            x = x0 + i * x_step
+            y = y0 + k * y_step
+
+            value = higgs_squared(k_value, x, y, 0.00)
+            bucket_value = int(floor(256 * value))
+            if(bucket_value > 255 or bucket_value < 0):
+                print i, k, bucket_value
+                bucket_value = 255
+            points.append(bucket_value)
+
+            last = bucket_value
+
+    return points
+
+def higgs_squared_on_xz_plane(k_value, x0, x1, z0, z1, partition_size):
+
+    x_step = (x1 - x0) / partition_size
+    z_step = (z1 - z0) / partition_size
+
+
+    points = []
+    last = 0
+    for k in range(0, partition_size):
+        for i in range(0, partition_size):
+            x = x0 + i * x_step
+            z = z0 + k * z_step
+
+            value = higgs_squared(k_value, x, 0.00, z)
+            bucket_value = int(floor(256 * value))
+            if(bucket_value > 255 or bucket_value < 0):
+                print i, k, bucket_value
+                bucket_value = 255
+            points.append(bucket_value)
+
+            last = bucket_value
+
+    return points
+
+
+
+def write_point_to_file(points, filename):
+
+    """
+
+    :rtype : object
+    """
+    fo = open(os.path.expanduser("~/Desktop/numerical monopoles/python_results/" + filename), 'wb')
+    byteArray = bytearray(points)
+    fo.write(byteArray)
+    fo.close()
+
+
 # t0 = time.time()
 # print higgs_squared(0.8, 2.01, 0, 0)
 # t1 = time.time()
@@ -149,7 +216,29 @@ def higgs_squared(k, x1, x2, x3):
 
 
 
-# fo = open(os.path.expanduser("~/Desktop/numerical monopoles/hwb_testhiggs_2"), 'w' )
+# fo = open(os.path.expanduser("~/Desktop/numerical monopoles/hwb_xyhiggs_k0"), 'w' )
 # for i in range(0, 400, 1):
 #     fo.write("%4.2f %15.9f\n"% ( (float(2*i) +2)/100, higgs_squared(0.8 ,  0.0, (float(2*i) +2)/100, 0.00 )    ))
 # fo.close()
+
+
+# for k in range(0, 5, 1):
+#     for i in range(0, 5, 1):
+#         x = 0.05 + i * 0.05
+#         y = 0.05 + k * 0.05
+#         print int(floor(256 * higgs_squared(0.001 , x, y, 0.0 ) ))
+#
+#
+# print higgs_squared(0.8 , 6 , 7 , 0.0)
+#
+# print int(floor(256 * (1.0- higgs_squared(0.8 , 0.05 , 0.05 , 0.0))))
+# #
+
+# p = higgs_squared_on_xy_plane(0.0001, 0.05, 10.05, 0.05, 10.05,  200)   # k, x-initial x-final, y-initial, y-final, partition size=no points between initial final
+#
+# write_point_to_file(p , 'hwb_xyhiggs_k0001')
+
+
+p = higgs_squared_on_xz_plane(0.0001, 0.05, 10.05, 0.05, 10.05,  200)   # k, x-initial x-final, y-initial, y-final, partition size=no points between initial final
+
+write_point_to_file(p , 'hwb_xzhiggs_k0001')

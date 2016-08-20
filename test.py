@@ -1,18 +1,22 @@
 __author__ = 'hwb'
 
-import time
-from numpy import complex64, matmul
-from math import *
-from mpmath import *
+
 import os
 
+from numpy import roots, complex, complex64, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj, floor
+from cmath import exp
+import time
+from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
+from numpy import roots, complex64, conj, pi, sqrt, sum, trace, linalg, matmul, array
+import time
+import math
 
 from energy_density_old import calc_zeta, calc_eta, calc_abel, calc_mu, energy_density_old, order_roots, quartic_roots
 from python_expressions.dmus import dmus
 from python_expressions.dzetas import dzetas
 from python_expressions.ddmus import ddmus
 from python_expressions.ddzetas import ddzetas
-from energy_density import energy_density
+from energy_density import energy_density, calc_zeta, calc_eta, calc_abel, calc_mu, order_roots, quartic_roots
 
 # The files above are common in a calculation. They are calculated once and used numerous times.
 # The file below is essentially the very long line and whose speed is the question.
@@ -28,6 +32,7 @@ def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
 
     points = []
     last = 0
+
     for j in range(0, partition_size):
         for i in range(0, partition_size):
             x = x0 + i * x_step
@@ -160,9 +165,9 @@ def energy_density_at_origin(k):
 
 
 
-# p = energy_density_on_xz_plane(0.8, 0.1, 3.1, 0.1, 3.1, 1.5, 30)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+# p = energy_density_on_xz_plane(0.8, 0.1, 3.1, 0.1, 3.1, 0.0, 30)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
 #
-# write_point_to_file(p , 'example_xz' + str(1.5))
+# write_point_to_file(p , 'example_xz' + str(0.0))
 
 # print energy_density(0.8, 1, 0.1, 0.1)
 # print energy_density(0.8, 1, 3.1, 0.1)
@@ -176,9 +181,9 @@ def energy_density_at_origin(k):
 #         print i,j, energy_density(0.8, x, 0, z)
 
 
-# energy_density_on_xz_plane(0.8, 0.1, 3.1, 0.1, 3.1, 0, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+# energy_density_on_xz_plane(0.8, 0.1, 3.1, 0.1, 3.1, 0, 40)
+#  k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
 
-# print energy_density(0.8, 1.0, 0, 2.35)
 
 
 def test_timing(k, x1, x2, x3):
@@ -198,20 +203,43 @@ def test_timing(k, x1, x2, x3):
 
 
     return A, B
-
+#
 # t15 = time.time()
-# C  = test_timing(.2, 1.5, 1.8, 0.3)
+# C  = test_timing(.2, 1.5, 1.2, 0.6)
 # t16 = time.time()
-
+#
 # print C
 # print str(t16-t15)
+
+
+
+# for j in range(0, 2):
+#     for i in range(0, 2):
+#         x = 0.1 + i * 0.075
+#         y = 0.1 + j * 0.075
 #
+#         print test_timing(0.8, x, y, 1.0)
+
+# energy_density_on_xy_plane(0.8, 0.1, 2.1, 0.1, 2.1, 0.1, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+
+def is_awc_multiple_root(k, x1, x2, x3):
+    K = complex64(ellipk(k**2))
+    k1 = sqrt(1-k**2)
+    tol = 0.001
+
+    if (4 * x1**2 * k1**2 - k**2 *( K**2 *k1**2 + 4* x2**2) < tol) and x3==0:
+        return True
+    elif (4 * x1**2 * k1**2 - K**2 *k1**2 + 4* x3**2 < tol) and x2==0:
+        return True
+
+    return False
 
 
-for j in range(0, 40):
-    for i in range(0, 40):
-        x = 0.1 + i * 0.075
-        y = 0.1 + j * 0.075
 
-        print test_timing(0.8, x, y, 1.0)
+# print energy_density(0.8, 1.0, 0, 2.35)
 
+# p = energy_density_on_xy_plane(0.8, 0.1, 2.1, 0.1, 2.1, 0.0, 20)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+
+print energy_density(0.8, 0.4, 0.3, 0.0)
+
+print is_awc_multiple_root(0.8, 0.4, 0.3, 0.0)
