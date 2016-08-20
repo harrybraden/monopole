@@ -37,47 +37,47 @@ from python_expressions.ddmus import ddmus
 from python_expressions.ddzetas import ddzetas
 
 from python_expressions.grams import grams
-from modified_expressions.dgrams1 import dgrams1
-from modified_expressions.dgrams2 import dgrams2
-from modified_expressions.dgrams3 import dgrams3
+from python_expressions.dgrams1 import dgrams1
+from python_expressions.dgrams2 import dgrams2
+from python_expressions.dgrams3 import dgrams3
 
 from python_expressions.phis import phis
-from modified_expressions.dphis111 import dphis111
-from modified_expressions.dphis112 import dphis112
-# from modified_expressions.dphis121 import dphis121
-from modified_expressions.dphis122 import dphis122
-from modified_expressions.dphis211 import dphis211
-from modified_expressions.dphis212 import dphis212
-# from modified_expressions.dphis221 import dphis221
-from modified_expressions.dphis222 import dphis222
-from modified_expressions.dphis311 import dphis311
-from modified_expressions.dphis312 import dphis312
-# from modified_expressions.dphis321 import dphis321
-from modified_expressions.dphis322 import dphis322
-from modified_expressions.ddgrams111 import ddgrams111
-from modified_expressions.ddgrams112 import ddgrams112
-# from modified_expressions.ddgrams121 import ddgrams121
-from modified_expressions.ddgrams122 import ddgrams122
-from modified_expressions.ddgrams211 import ddgrams211
-from modified_expressions.ddgrams212 import ddgrams212
-# from modified_expressions.ddgrams221 import ddgrams221
-from modified_expressions.ddgrams222 import ddgrams222
-from modified_expressions.ddgrams311 import ddgrams311
-from modified_expressions.ddgrams312 import ddgrams312
-# from modified_expressions.ddgrams321 import ddgrams321
-from modified_expressions.ddgrams322 import ddgrams322
-from modified_expressions.ddphis111 import ddphis111
-from modified_expressions.ddphis112 import ddphis112
-# from modified_expressions.ddphis121 import ddphis121
-from modified_expressions.ddphis122 import ddphis122
-from modified_expressions.ddphis211 import ddphis211
-from modified_expressions.ddphis212 import ddphis212
-# from modified_expressions.ddphis221 import ddphis221
-from modified_expressions.ddphis222 import ddphis222
-from modified_expressions.ddphis311 import ddphis311
-from modified_expressions.ddphis312 import ddphis312
-# from modified_expressions.ddphis321 import ddphis321
-from modified_expressions.ddphis322 import ddphis322
+from python_expressions.dphis111 import dphis111
+from python_expressions.dphis112 import dphis112
+# from python_expressions.dphis121 import dphis121
+from python_expressions.dphis122 import dphis122
+from python_expressions.dphis211 import dphis211
+from python_expressions.dphis212 import dphis212
+from python_expressions.dphis221 import dphis221
+from python_expressions.dphis222 import dphis222
+from python_expressions.dphis311 import dphis311
+from python_expressions.dphis312 import dphis312
+# from python_expressions.dphis321 import dphis321
+from python_expressions.dphis322 import dphis322
+from python_expressions.ddgrams111 import ddgrams111
+from python_expressions.ddgrams112 import ddgrams112
+from python_expressions.ddgrams121 import ddgrams121
+from python_expressions.ddgrams122 import ddgrams122
+from python_expressions.ddgrams211 import ddgrams211
+from python_expressions.ddgrams212 import ddgrams212
+# from python_expressions.ddgrams221 import ddgrams221
+from python_expressions.ddgrams222 import ddgrams222
+from python_expressions.ddgrams311 import ddgrams311
+from python_expressions.ddgrams312 import ddgrams312
+# from python_expressions.ddgrams321 import ddgrams321
+from python_expressions.ddgrams322 import ddgrams322
+from python_expressions.ddphis111 import ddphis111
+from python_expressions.ddphis112 import ddphis112
+# from python_expressions.ddphis121 import ddphis121
+from python_expressions.ddphis122 import ddphis122
+from python_expressions.ddphis211 import ddphis211
+from python_expressions.ddphis212 import ddphis212
+# from python_expressions.ddphis221 import ddphis221
+from python_expressions.ddphis222 import ddphis222
+from python_expressions.ddphis311 import ddphis311
+from python_expressions.ddphis312 import ddphis312
+# from python_expressions.ddphis321 import ddphis321
+from python_expressions.ddphis322 import ddphis322
 
 def quartic_roots(k, x1, x2, x3):
     K = complex64(ellipk(k**2))
@@ -155,7 +155,7 @@ def calc_mu(k, x1, x2, x3, zeta, abel):
     return mu
 
 
-def energy_density(k, x1, x2, x3):
+def energy_density_old(k, x1, x2, x3):
 
     zeta = calc_zeta(k ,x1, x2, x3)
     eta = calc_eta(k, x1, x2, x3)
@@ -280,6 +280,21 @@ def energy_density(k, x1, x2, x3):
 
     return -(ed1 + ed2 + ed3).real
 
+# k = 0.8
+#
+# x1 = 1.5
+# x2 = 1.9
+# x3 = 0.5
+#
+# t3 = time.time()
+# A  = energy_density(k , x1, x2, x3)
+# t4 = time.time()
+#
+# print A
+#
+# print str(t4-t3)
+#
+# print test(k , x1, x2, x3)
 
 def test_timing(k, x1, x2, x3):
 
@@ -335,14 +350,12 @@ def test_timing(k, x1, x2, x3):
 # print str(t16-t15)
 #
 # t4 = time.time()
-# A  = energy_density_new(.8, 1.5, 0.7, 0.3)
+# A  = energy_density(.8, 1.5, 0.7, 0.3)
 # t5 = time.time()
 #
 # print A
 # print str(t5-t4)
 
-
 # print order_roots(quartic_roots(0.8, 1.0, 0, 2.35))
-
 
 # print quartic_roots(0.8, 1 , 0, 2.35)
