@@ -107,7 +107,38 @@ def calc_mu(k, x1, x2, x3, zeta, abel):
             - x3 - (x2 + complex(0,1) *x1) * zeta[i]))
     return mu
 
+
+def is_awc_multiple_root(k, x1, x2, x3):   # This will test if there are multiple roots; the analytic derivation assumes they are distinct
+    K = complex64(ellipk(k**2))
+    k1 = sqrt(1-k**2)
+    tol = 0.001
+
+    if ( (abs(4 * x1**2 * k1**2 - k**2 *( K**2 *k1**2 + 4* x2**2)) < tol) and x3==0):
+        return True
+    elif ( (abs(4 * x1**2 * k1**2 - K**2 *k1**2 + 4* x3**2 )< tol) and x2==0):
+        return True
+
+    return False
+
+def is_awc_branch_point(k, x1, x2, x3):   # This will test if we get a branch point as a roots; these are numerically unstable
+    K = complex64(ellipk(k**2))
+    k1 = sqrt(1-k**2)
+    tol = 0.001
+
+    if ( (abs(k1 * x1- k*x2) < tol) and x3==0):
+        return True
+
+
+    return False
+
+
 def higgs_squared(k, x1, x2, x3):
+
+    if (is_awc_multiple_root(k, x1, x2, x3) ):
+        return float(255)/float(256)
+
+    if (is_awc_branch_point(k, x1, x2, x3) ):
+        return float(255)/float(256)
 
     zeta = calc_zeta(k ,x1, x2, x3)
     eta = calc_eta(k, x1, x2, x3)
@@ -141,6 +172,8 @@ def higgs_squared(k, x1, x2, x3):
     inv_gram = matrix(GNUM).I
 
     higgs = phis(zeta, mu, [x1, x2, x3], k)
+
+    # print GNUM, inv_gram, higgs # for testing
 
     return  -(trace(matmul( matmul(higgs, inv_gram),  matmul(higgs, inv_gram) )).real)/2
 
@@ -239,6 +272,8 @@ def write_point_to_file(points, filename):
 # write_point_to_file(p , 'hwb_xyhiggs_k0001')
 
 
-p = higgs_squared_on_xz_plane(0.0001, 0.05, 10.05, 0.05, 10.05,  200)   # k, x-initial x-final, y-initial, y-final, partition size=no points between initial final
+# p = higgs_squared_on_xz_plane(0.0001, 0.05, 10.05, 0.05, 10.05,  200)   # k, x-initial x-final, y-initial, y-final, partition size=no points between initial final
+#
+# write_point_to_file(p , 'hwb_xzhiggs_k0001')
 
-write_point_to_file(p , 'hwb_xzhiggs_k0001')
+# print higgs_squared(0.8, 0.4, 0.3, 0.001)
