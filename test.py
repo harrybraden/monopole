@@ -1,22 +1,30 @@
 __author__ = 'hwb'
 
-
 import os
+import numpy
+import copy
+from array_tools import smoothed_image, unsmoothed_image
+import smoothing_tools
 
 from numpy import roots, complex, complex64, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj, floor
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
 from numpy import roots, complex64, conj, pi, sqrt, sum, trace, linalg, matmul, array
-import time
 import math
 
-from energy_density_old import calc_zeta, calc_eta, calc_abel, calc_mu, energy_density_old, order_roots, quartic_roots
+from higgs_squared import higgs_squared
+
+# from energy_density_old import calc_zeta, calc_eta, calc_abel, calc_mu, energy_density_old, order_roots, quartic_roots
 from python_expressions.dmus import dmus
 from python_expressions.dzetas import dzetas
 from python_expressions.ddmus import ddmus
 from python_expressions.ddzetas import ddzetas
-from energy_density import energy_density, calc_zeta, calc_eta, calc_abel, calc_mu, order_roots, quartic_roots
+from energy_density import energy_density, calc_zeta, calc_eta, calc_abel, calc_mu, order_roots, quartic_roots, \
+     energy_density_on_xy_plane, energy_density_on_yz_plane, energy_density_on_xz_plane, energy_density_at_origin, is_awc_multiple_root, \
+     is_awc_branch_point, write_point_to_file
+from energy_density_old import energy_density_old
+
 
 # The files above are common in a calculation. They are calculated once and used numerous times.
 # The file below is essentially the very long line and whose speed is the question.
@@ -24,89 +32,6 @@ from python_expressions.ddphis111 import ddphis111
 from python_expressions.NDD111 import nddphis111
 from python_expressions.ddgrams211 import ddgrams211
 
-
-def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
-
-    x_step = (x1 - x0) / partition_size
-    y_step = (y1 - y0) / partition_size
-
-    points = []
-    last = 0
-
-    for j in range(0, partition_size):
-        for i in range(0, partition_size):
-            x = x0 + i * x_step
-            y = y0 + j * y_step
-
-            value = energy_density(k, x, y, z)
-            bucket_value = int(floor(256 * value))
-            if(bucket_value > 255 or bucket_value < 0):
-                print i, j, bucket_value
-                bucket_value = 255
-            points.append(bucket_value)
-
-            last = bucket_value
-
-    return points
-
-def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
-
-    y_step = (y1 - y0) / partition_size
-    z_step = (z1 - z0) / partition_size
-
-    points = []
-    last = 0
-    for j in range(0, partition_size):
-        for i in range(0, partition_size):
-            y = y0 + i * y_step
-            z = z0 + j * z_step
-
-            value = energy_density(k, x, y, z)
-            bucket_value = int(floor(256 * value))
-            if(bucket_value > 255 or bucket_value < 0):
-                print i, j, bucket_value
-                bucket_value = 255
-            points.append(bucket_value)
-
-            last = bucket_value
-
-    return points
-
-def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):
-
-    x_step = (x1 - x0) / partition_size
-    z_step = (z1 - z0) / partition_size
-
-
-    points = []
-    last = 0
-    for j in range(0, partition_size):
-        for i in range(0, partition_size):
-            x = x0 + i * x_step
-            z = z0 + j * z_step
-
-            value = energy_density(k, x, y, z)
-            bucket_value = int(floor(256 * value))
-            if(bucket_value > 255 or bucket_value < 0):
-                print i, j, bucket_value
-                bucket_value = 255
-            points.append(bucket_value)
-
-            last = bucket_value
-
-    return points
-
-
-def write_point_to_file(points, filename):
-
-    """
-
-    :rtype : object
-    """
-    fo = open(os.path.expanduser("~/Desktop/numerical monopoles/python_results/" + filename), 'wb')
-    byteArray = bytearray(points)
-    fo.write(byteArray)
-    fo.close()
 
 # t1 = time.time()
 # p = energy_density_on_xy_plane(0.999, 0.1, 3.1, 0.1, 3.1, 0, 30)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
@@ -143,15 +68,6 @@ def write_point_to_file(points, filename):
 #
 # print int(floor(256 * energy_density(0.8, 2.6, 1.9, 0)))
 
-
-def energy_density_at_origin(k):
-    K = complex64(ellipk(k**2))
-    E = complex64(ellipe(k**2))
-    k1 = sqrt(1-k**2)
-
-    A = 32*(k**2 *(-K**2 * k**2 +E**2-4*E*K+3* K**2 + k**2)-2*(E-K)**2)**2/(k**8 * K**4 * k1**2)
-
-    return A.real
 
 
 # for i in range(0, 10 , 1):
@@ -222,24 +138,129 @@ def test_timing(k, x1, x2, x3):
 
 # energy_density_on_xy_plane(0.8, 0.1, 2.1, 0.1, 2.1, 0.1, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
 
-def is_awc_multiple_root(k, x1, x2, x3):
-    K = complex64(ellipk(k**2))
-    k1 = sqrt(1-k**2)
-    tol = 0.001
-
-    if (4 * x1**2 * k1**2 - k**2 *( K**2 *k1**2 + 4* x2**2) < tol) and x3==0:
-        return True
-    elif (4 * x1**2 * k1**2 - K**2 *k1**2 + 4* x3**2 < tol) and x2==0:
-        return True
-
-    return False
-
-
-
 # print energy_density(0.8, 1.0, 0, 2.35)
 
-# p = energy_density_on_xy_plane(0.8, 0.1, 2.1, 0.1, 2.1, 0.0, 20)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+# p = energy_density_on_xy_plane(0.8, 0.1, 3.1, 0.1, 3.1, 0.1, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+#
+# write_point_to_file(p, 'example_xy_8_3_1')
+#
+# for i in range(0, 17):
+#     print i
+#     z = float(i)*0.1
+#     p = energy_density_on_xy_plane(0.2, 0.1, 3.1, 0.1, 3.1, z, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+#     write_point_to_file(p , 'example_xy_2_3_' +str(i))
 
-print energy_density(0.8, 0.4, 0.3, 0.0)
+p = energy_density_on_xy_plane(0.2, 0.1, 3.1, 0.1, 3.1, 3.0, 40)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+write_point_to_file(p , 'example_xy_2_3_30')
 
-print is_awc_multiple_root(0.8, 0.4, 0.3, 0.0)
+# for i in range(0, 17):
+#     print i
+#     y = float(i)*0.1
+#     p = energy_density_on_xz_plane(0.2, 0.1, 3.1, 0.1, 3.1, y, 40)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+#     write_point_to_file(p , 'example_xz_2_3_' +str(i))
+
+# p = energy_density_on_xz_plane(0.8, 0.1, 3.1, 0.1, 3.1, 3.0, 40)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+# write_point_to_file(p , 'example_xz_8_3_30')
+
+# for i in range(0, 17):
+#     print i
+#     x = float(i)*0.1
+#     p = energy_density_on_yz_plane(0.2, 0.1, 3.1, 0.1, 3.1, x, 40)   # k, y-initial y-final, z-initial, z-final, x, partition size=no points between initial final
+#     write_point_to_file(p , 'example_yz_2_3_' +str(i))
+
+
+
+# print 'example_xy_8_3_' +str(1) +'v'
+
+# write_point_to_file(energy_density_on_xy_plane(0.8, 0.1, 3.1, 0.1, 3.1, 0.0, 40),  'example_xy_8_3_0v')
+
+# energy_density_on_xy_plane(0.8, 0.1, 2.1, 0.1, 2.1, 0.05, 20)
+
+# print order_roots(quartic_roots(0.8, 0.4, 0.3, 0.0))
+# print energy_density(0.8, 0.4, 0.3, 0.0)
+# print calc_eta(0.8, 0.4, 0.3, 0.0)
+
+
+
+# print order_roots(quartic_roots(0.8, 0.8, 0.6, 0.0))
+# print order_roots(quartic_roots(0.8, 1.2, 0.9, 0.0))
+# print order_roots(quartic_roots(0.8, 1.6, 1.2, 0.0))
+# print order_roots(quartic_roots(0.8, 2.0, 1.5, 0.0))
+
+# p= energy_density_on_xz_plane(0.2, 0.1, 3.1, 0.1, 3.1, 0.0, 40)
+#
+# write_point_to_file(p, 'example_xz_2_3_0')
+
+# for i in range(5, 8):
+#     print i
+#     y = float(i)*0.1
+#     p = energy_density_on_xz_plane(0.2, 0.1, 3.1, 0.1, 3.1, y, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+#     write_point_to_file(p , 'example_xz_2_3_' + str(i))
+#
+
+
+# k  = 0.8
+# x1 = 1.0
+# x2 = 0.00
+# x3 = 0.0
+#
+# k1 = sqrt(1-k**2)
+# a=k1+complex(0, 1)*k
+# b=k1-complex(0, 1)*k
+
+
+# zeta = calc_zeta(k ,x1, x2, x3)
+# eta = calc_eta(k, x1, x2, x3)
+# abel = calc_abel(k, zeta, eta)
+# mu = calc_mu(k, x1, x2, x3, zeta, abel)
+#
+# lambda_test = map(lambda zetai : \
+#                     complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))), \
+#                 zeta)
+# print zeta
+# print lambda_test
+
+# for i in range(0, 7, 1):
+#     x1 = 0.97+float(i)*0.01
+#     zeta = calc_zeta(k ,x1, x2, x3)
+#     # print x1, map(lambda zetai :  complex(0, 1) * 1/(complex64(ellipk(k**2))*2*b) *\
+#     #                              complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))),\
+#     #             zeta)
+#     print x1, zeta[0], map(lambda zetai :  complex(0, 1) * 1/(complex64(ellipk(k**2))*2*b) * \
+#                            complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))),zeta)[0]
+
+
+# print zeta
+# print eta
+# print abel
+# print mu
+#
+#
+# print higgs_squared(k,x1,x2,x3)
+#
+# print energy_density_old(k,x1,x2,x3)
+#
+# print energy_density(k,x1,x2,x3)
+
+
+# print is_awc_multiple_root(0.8, 1.0, 0.0, 0.1)
+#
+# print is_awc_branch_point(0.8, 1.0, 0.0, 0.1)
+
+# print energy_density(0.8, 0.4, 0.3, 0.0)
+#
+# print higgs_squared(0.8, 0.4, 0.3, 0.0)
+
+# data = "example_xy_8_3_1"
+#
+# file = "~/Desktop/numerical monopoles/python_results/%s"  % data
+#
+# print file
+
+# def naming(file):
+#     data ="file"
+#     return "~/Desktop/numerical monopoles/python_results/%s"  % file
+#
+# print naming("example_xy_8_3_1")
+
+

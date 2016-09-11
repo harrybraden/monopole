@@ -22,13 +22,14 @@ __author__ = 'hwb'
 #
 #
 
-from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  matmul
+from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  matmul, floor
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
 # from numpy import roots, complex64, conj, pi, sqrt, sum, trace, linalg, array
 import time
 import math
+import os
 
 from python_expressions.dexp import dexp
 from python_expressions.dmus import dmus
@@ -154,8 +155,48 @@ def calc_mu(k, x1, x2, x3, zeta, abel):
             - x3 - (x2 + complex(0,1) *x1) * zeta[i]))
     return mu
 
+def is_awc_multiple_root(k, x1, x2, x3):   # This will test if there are multiple roots; the analytic derivation assumes they are distinct
+    K = complex64(ellipk(k**2))
+    k1 = sqrt(1-k**2)
+    tol1 = 0.05
+    tol2 = 0.05
+
+    # Two smoothings here. This one is the better
+
+    if ( (abs(4 * x1**2 * k1**2 - k**2 *( K**2 *k1**2 + 4* x2**2)) < tol1) and abs(x3)<tol2):
+        return True
+    elif ( (abs(4 * x1**2 * k1**2 - K**2 *k1**2 + 4* x3**2 )< tol1) and abs(x2)<tol2):
+        return True
+
+    # Second smoothing
+
+    # tol = 0.01
+    #
+    # if ( (abs(4 * x1**2 * k1**2 - k**2 *( K**2 *k1**2 + 4* x2**2)) < tol) and x3==0):
+    #     return True
+    # elif ( (abs(4 * x1**2 * k1**2 - K**2 *k1**2 + 4* x3**2 )< tol) and x2==0):
+    #     return True
+
+    return False
+
+def is_awc_branch_point(k, x1, x2, x3):   # This will test if we get a branch point as a roots; these are numerically unstable
+    K = complex64(ellipk(k**2))
+    k1 = sqrt(1-k**2)
+    tol = 0.001
+
+    if ( (abs(k1 * x1- k * x2) < tol) and x3==0):
+        return True
+
+
+    return False
 
 def energy_density(k, x1, x2, x3):
+
+    if (is_awc_multiple_root(k, x1, x2, x3) ):
+        return float(255)/float(256)
+
+    if (is_awc_branch_point(k, x1, x2, x3) ):
+        return float(255)/float(256)
 
     zeta = calc_zeta(k ,x1, x2, x3)
     eta = calc_eta(k, x1, x2, x3)
@@ -280,6 +321,87 @@ def energy_density(k, x1, x2, x3):
 
     return  -(ed1 + ed2 + ed3).real
 
+def energy_density_at_origin(k):
+    K = complex64(ellipk(k**2))
+    E = complex64(ellipe(k**2))
+    k1 = sqrt(1-k**2)
+
+    A = 32*(k**2 *(-K**2 * k**2 +E**2-4*E*K+3* K**2 + k**2)-2*(E-K)**2)**2/(k**8 * K**4 * k1**2)
+
+    return A.real
+
+def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
+
+    x_step = (x1 - x0) / partition_size
+    y_step = (y1 - y0) / partition_size
+
+    points = []
+    last = 0
+
+    for j in range(0, partition_size):
+        for i in range(0, partition_size):
+            x = x0 + i * x_step
+            y = y0 + j * y_step
+
+            value = energy_density(k, x, y, z)
+            bucket_value = int(floor(256 * value))
+            if(bucket_value > 255 or bucket_value < 0):
+                print i, j, bucket_value
+                bucket_value = 255
+            points.append(bucket_value)
+
+            last = bucket_value
+
+    return points
+
+def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
+
+    y_step = (y1 - y0) / partition_size
+    z_step = (z1 - z0) / partition_size
+
+    points = []
+    last = 0
+    for j in range(0, partition_size):
+        for i in range(0, partition_size):
+            y = y0 + i * y_step
+            z = z0 + j * z_step
+
+            value = energy_density(k, x, y, z)
+            bucket_value = int(floor(256 * value))
+            if(bucket_value > 255 or bucket_value < 0):
+                print i, j, bucket_value
+                bucket_value = 255
+            points.append(bucket_value)
+
+            last = bucket_value
+
+    return points
+
+def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):
+
+    x_step = (x1 - x0) / partition_size
+    z_step = (z1 - z0) / partition_size
+
+
+    points = []
+    last = 0
+    for j in range(0, partition_size):
+        for i in range(0, partition_size):
+            x = x0 + i * x_step
+            z = z0 + j * z_step
+
+            value = energy_density(k, x, y, z)
+            bucket_value = int(floor(256 * value))
+            if(bucket_value > 255 or bucket_value < 0):
+                print i, j, bucket_value
+                bucket_value = 255
+            points.append(bucket_value)
+
+            last = bucket_value
+
+    return points
+
+
 
 def test_timing(k, x1, x2, x3):
 
@@ -325,6 +447,18 @@ def test_timing(k, x1, x2, x3):
     print str(t5-t4)
 
     return A, B, C
+
+def write_point_to_file(points, filename):
+
+    """
+
+    :rtype : object
+    """
+    fo = open(os.path.expanduser("~/Desktop/numerical monopoles/python_results/" + filename), 'wb')
+    byteArray = bytearray(points)
+    fo.write(byteArray)
+    fo.close()
+
 
 
 # t15 = time.time()

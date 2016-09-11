@@ -22,7 +22,7 @@ __author__ = 'hwb'
 #
 #
 
-from numpy import roots, complex, complex64, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj
+from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj, floor
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
@@ -359,3 +359,5 @@ def test_timing(k, x1, x2, x3):
 # print order_roots(quartic_roots(0.8, 1.0, 0, 2.35))
 
 # print quartic_roots(0.8, 1 , 0, 2.35)
+
+# print energy_density_old(0.8, 0.925, 0.2, 2.425)
