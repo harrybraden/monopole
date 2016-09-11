@@ -36,7 +36,11 @@ def smoothed_image(data):
 
     smoothed = smoothing_tools.smooth_2d(shaped_list)
 
-    bottom_right_quadrant = smoothed
+    return reflect_symmetries(smoothed)
+
+    
+def reflect_symmetries(positive_quadrant):
+    bottom_right_quadrant = positive_quadrant
     top_right_quadrant = copy.deepcopy(bottom_right_quadrant)
     top_right_quadrant.reverse()
 
@@ -45,7 +49,6 @@ def smoothed_image(data):
     left_half = copy.deepcopy(right_half)
     for a in left_half:
         a.reverse()
-
     full = []
     for i in range(0, len(right_half)):
         full.append(None)
@@ -62,20 +65,5 @@ def unsmoothed_image(data):
 
     shaped_list = reconstruct_2d(bytes)
 
-    bottom_right_quadrant = shaped_list
-    top_right_quadrant = copy.deepcopy(bottom_right_quadrant)
-    top_right_quadrant.reverse()
-
-    right_half = top_right_quadrant + bottom_right_quadrant
-
-    left_half = copy.deepcopy(right_half)
-    for a in left_half:
-        a.reverse()
-
-    full = []
-    for i in range(0, len(right_half)):
-        full.append(None)
-        full[i] = left_half[i] + right_half[i]
-
-    return full
+    return reflect_symmetries(shaped_list)
 
