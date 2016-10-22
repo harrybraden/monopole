@@ -449,12 +449,11 @@ def test_timing(k, x1, x2, x3):
     return A, B, C
 
 def write_point_to_file(points, filename):
-
     """
-
     :rtype : object
     """
-    fo = open(os.path.expanduser("~/Desktop/numerical monopoles/python_results/" + filename), 'wb')
+    directory = os.environ['MONOPOLE_OUTPUT'] or "~/Desktop/numerical monopoles/python_results/"
+    fo = open(os.path.expanduser(directory + filename), 'wb')
     byteArray = bytearray(points)
     fo.write(byteArray)
     fo.close()
