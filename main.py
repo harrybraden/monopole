@@ -8,16 +8,18 @@ import time
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('k', type=float)
-    parser.add_argument('x_initial', type=float)
-    parser.add_argument('z_final', type=float)
-    parser.add_argument('z_initial', type=float)
-    parser.add_argument('y_final', type=float)
-    parser.add_argument('y', type=float)
+    parser.add_argument('x0', type=float)
+    parser.add_argument('x1', type=float)
+    parser.add_argument('y0', type=float)
+    parser.add_argument('y1', type=float)
+    parser.add_argument('z', type=float)
     parser.add_argument('partition_size', type=int)
     args = parser.parse_args()
 
-    print "Rendering XY[k=%s, x initial=%s, z final=%s, z initial=%s, y final=%s, y=%s, partition=%s]" % (args.k, args.x_initial, args.z_final, args.z_initial, args.y_final, args.y, args.partition_size)
+    print ("Rendering XY [k=%s, x0=%s, x1=%s, y0=%s, y1=%s, z=%s, partition=%s]" %
+        (args.k, args.x0, args.x1, args.y0, args.y1, args.z, args.partition_size))
 
-    # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
-    p = energy_density_on_xy_plane(args.k, args.x_initial, args.z_final, args.z_initial, args.y_final, args.y, args.partition_size)
-    write_point_to_file(p , 'example_xy_%s_%s_%s' % (args.k, args.x_initial, args.y_final) )
+    #energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
+    p = energy_density_on_xy_plane(args.k, args.x0, args.x1, args.y0, args.y1, args.z, args.partition_size)
+    write_point_to_file(p , 'xy_%s_%s-%s_%s-%s_%s_%s' 
+            % (args.k, args.x0, args.x1, args.y0, args.y1, args.z, args.partition_size) )
