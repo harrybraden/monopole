@@ -452,8 +452,7 @@ def write_point_to_file(points, filename):
     """
     :rtype : object
     """
-    directory = os.environ['MONOPOLE_OUTPUT'] or "~/Desktop/numerical monopoles/python_results/"
-    fo = open(os.path.expanduser(directory + filename), 'wb')
+    fo = open(os.path.expanduser(filename), 'wb')
     byteArray = bytearray(points)
     fo.write(byteArray)
     fo.close()
