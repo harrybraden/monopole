@@ -13,25 +13,6 @@ def load(path):
     shaped_list = array_tools.reconstruct_2d(bytes)
     return shaped_list
 
-def reflect(tl_quadrant):
-    smoothed = smoothing_tools.smooth_2d(tl_quadrant)
-    bottom_right_quadrant = smoothed
-    top_right_quadrant = copy.deepcopy(bottom_right_quadrant)
-    top_right_quadrant.reverse()
-    right_half = top_right_quadrant + bottom_right_quadrant
-    left_half = copy.deepcopy(right_half)
-
-    for a in left_half:
-        a.reverse()
-        
-    full = []
-    for i in range(0, len(right_half)):
-        full.append(None)
-        full[i] = left_half[i] + right_half[i]
-
-    return full
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('file')
@@ -39,7 +20,8 @@ if __name__ == "__main__":
     print "Rendering %s" % args.file
 
     data = load(args.file)
-    reflected = reflect(data)
+    smoothed = smoothing_tools.smooth_2d(data)
+    reflected = array_tools.reflect_symmetries(smoothed)
 
     imgplot = imshow(reflected, cmap=get_cmap('viridis'))
     savefig(args.file + '.png')
