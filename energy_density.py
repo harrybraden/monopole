@@ -22,7 +22,7 @@ __author__ = 'hwb'
 #
 #
 
-from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  matmul, floor
+from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  floor
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
@@ -336,7 +336,6 @@ def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
     y_step = (y1 - y0) / partition_size
 
     points = []
-    last = 0
 
     for j in range(0, partition_size):
         for i in range(0, partition_size):
@@ -350,7 +349,6 @@ def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
                 bucket_value = 255
             points.append(bucket_value)
 
-            last = bucket_value
 
     return points
 
@@ -360,7 +358,6 @@ def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
     z_step = (z1 - z0) / partition_size
 
     points = []
-    last = 0
     for j in range(0, partition_size):
         for i in range(0, partition_size):
             y = y0 + i * y_step
@@ -373,7 +370,6 @@ def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
                 bucket_value = 255
             points.append(bucket_value)
 
-            last = bucket_value
 
     return points
 
@@ -384,7 +380,6 @@ def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):
 
 
     points = []
-    last = 0
     for j in range(0, partition_size):
         for i in range(0, partition_size):
             x = x0 + i * x_step
@@ -397,7 +392,6 @@ def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):
                 bucket_value = 255
             points.append(bucket_value)
 
-            last = bucket_value
 
     return points
 
