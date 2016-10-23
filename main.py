@@ -1,33 +1,23 @@
 __author__ = 'hwb'
-from energy_density import energy_density
+
+from energy_density import energy_density, energy_density_on_xy_plane, write_point_to_file
 from higgs_squared import higgs_squared
+import argparse
 import time
 
-t0 = time.time()
-A  = energy_density(.8, 1.5, 0.9, 0.3)
-t1 = time.time()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('k', type=float)
+    parser.add_argument('x_initial', type=float)
+    parser.add_argument('z_final', type=float)
+    parser.add_argument('z_initial', type=float)
+    parser.add_argument('y_final', type=float)
+    parser.add_argument('y', type=float)
+    parser.add_argument('partition_size', type=int)
+    args = parser.parse_args()
 
-print A
-print str(t1-t0)
+    print "Rendering XY[k=%s, x initial=%s, z final=%s, z initial=%s, y final=%s, y=%s, partition=%s]" % (args.k, args.x_initial, args.z_final, args.z_initial, args.y_final, args.y, args.partition_size)
 
-# t2 = time.time()
-# B  = higgs_squared(.8, 1.5, 0.0, 0.0)
-# t3 = time.time()
-#
-# print B
-# print str(t3-t2)
-
-
-# t0 = time.time()
-# print higgs_squared(0.8, 2.01, 0, 0)
-# t1 = time.time()
-# print str(t1-t0)
-
-# print "%.8f"%  higgs_squared(0.8 , 1 , 0.5 , 0.04)
-
-
-
-# fo = open(os.path.expanduser("~/Desktop/numerical monopoles/hwb_testhiggs_2"), 'w' )
-# for i in range(0, 400, 1):
-#     fo.write("%4.2f %15.9f\n"% ( (float(2*i) +2)/100, higgs_squared(0.8 ,  0.0, (float(2*i) +2)/100, 0.00 )    ))
-# fo.close()
+    # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+    p = energy_density_on_xy_plane(args.k, args.x_initial, args.z_final, args.z_initial, args.y_final, args.y, args.partition_size)
+    write_point_to_file(p , 'example_xy_%s_%s_%s' % (args.k, args.x_initial, args.y_final) )

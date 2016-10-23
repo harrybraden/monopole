@@ -5,7 +5,7 @@
 ### Generate Data
 
 ```
-MONOPOLE_OUTPUT=/path/to/data/directory/ python test.py
+MONOPOLE_OUTPUT=/Users/peterbraden/repos/monopole/out/ python main.py 0.2 0.1 3.1 0.1 3.1 3.0 10
 ```
 
 ### Run Visualisation
