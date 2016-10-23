@@ -41,5 +41,5 @@ if __name__ == "__main__":
     data = load(args.file)
     reflected = reflect(data)
 
-    imgplot = imshow(reflected)
+    imgplot = imshow(reflected, cmap=get_cmap('viridis'))
     savefig(args.file + '.png')
