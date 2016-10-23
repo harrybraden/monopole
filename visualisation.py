@@ -4,7 +4,7 @@ from numpy import sqrt
 import copy
 import array_tools
 import smoothing_tools
-from matplotlib.pyplot import * 
+import matplotlib.pyplot as plt
 import argparse
 
 def load(path):
@@ -23,5 +23,6 @@ if __name__ == "__main__":
     smoothed = smoothing_tools.smooth_2d(data)
     reflected = array_tools.reflect_symmetries(smoothed)
 
-    imgplot = imshow(reflected, cmap=get_cmap('viridis'))
-    savefig(args.file + '.png')
+    plt.title(args.file)
+    imgplot = plt.imshow(reflected, cmap=plt.get_cmap('viridis'), vmin=0, vmax=255)
+    plt.savefig(args.file + '.png')
