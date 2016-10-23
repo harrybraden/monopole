@@ -1,3 +1,11 @@
-jupyter notebook
 
-6
+
+## Running
+
+### Generate Data
+
+```
+MONOPOLE_OUTPUT=/path/to/data/directory/ python test.py
+```
+
+### Run Visualisation
