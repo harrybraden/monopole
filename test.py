@@ -150,8 +150,14 @@ def test_timing(k, x1, x2, x3):
 #     p = energy_density_on_xy_plane(0.2, 0.1, 3.1, 0.1, 3.1, z, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
 #     write_point_to_file(p , 'example_xy_2_3_' +str(i))
 
-p = energy_density_on_xy_plane(0.2, 0.1, 3.1, 0.1, 3.1, 3.0, 40)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
-write_point_to_file(p , 'example_xy_2_3_30')
+
+
+def run():
+    p = energy_density_on_xy_plane(0.2, 0.1, 3.1, 0.1, 3.1, 3.0, 10)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+    write_point_to_file(p , 'example_xy_2_3_30')
+
+import cProfile
+cProfile.run('run()')
 
 # for i in range(0, 17):
 #     print i
