@@ -20,8 +20,8 @@ if __name__ == "__main__":
     print "Rendering %s" % args.file
 
     data = load(args.file)
-    smoothed = smoothing_tools.smooth_2d(data)
-    reflected = array_tools.reflect_symmetries(smoothed)
+    #smoothed = smoothing_tools.smooth_2d(data)
+    reflected = array_tools.reflect_symmetries(data)
 
     plt.title(args.file)
     imgplot = plt.imshow(reflected, cmap=plt.get_cmap('viridis'), vmin=0, vmax=255)
