@@ -24,5 +24,5 @@ if __name__ == "__main__":
     reflected = array_tools.reflect_symmetries(data)
 
     plt.title(args.file)
-    imgplot = plt.imshow(reflected, cmap=plt.get_cmap('viridis'), vmin=0, vmax=255)
+    imgplot = plt.imshow(reflected, interpolation='none', cmap=plt.get_cmap('viridis'), vmin=0, vmax=255)
     plt.savefig(args.file + '.png')
