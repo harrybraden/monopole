@@ -1,4 +1,5 @@
-__author__ = 'hwb'
+from __future__ import print_function
+
 #  This file will calculate the energy_density for a point (x1, x2, x3) of space and a parameter k (between 0 and 1)
 #
 #  Given a point x we associate to this four points P=(zeta, eta) on an elliptic curve. The four zeta values for these are determined by the roots of the quartic describing the curve
@@ -22,7 +23,9 @@ __author__ = 'hwb'
 #
 #
 
-from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  floor
+__author__ = 'hwb'
+
+from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  matmul, floor
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
@@ -30,6 +33,7 @@ from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfro
 import time
 import math
 import os
+import sys
 
 from python_expressions.dexp import dexp
 from python_expressions.dmus import dmus
@@ -79,6 +83,9 @@ from modified_expressions.ddphis311 import ddphis311
 from modified_expressions.ddphis312 import ddphis312
 # from modified_expressions.ddphis321 import ddphis321
 from modified_expressions.ddphis322 import ddphis322
+
+def eprint(*args, **kwargs):
+        print(*args, file=sys.stderr, **kwargs)
 
 def quartic_roots(k, x1, x2, x3):
     K = complex128(ellipk(k**2))
@@ -337,17 +344,21 @@ def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
 
     points = []
 
-    for j in range(0, partition_size):
-        for i in range(0, partition_size):
+    for j in xrange(0, partition_size):
+        if j % 10 == 0 and j > 0:
+            eprint("- rendered %s lines..." % j)
+
+        for i in xrange(0, partition_size):
             x = x0 + i * x_step
             y = y0 + j * y_step
 
             value = energy_density(k, x, y, z)
             bucket_value = int(floor(256 * value))
             if(bucket_value > 255 or bucket_value < 0):
-                print i, j, bucket_value
+                eprint('overflow: %s,%s : %s' % (i, j, bucket_value))
                 bucket_value = 255
             points.append(bucket_value)
+
 
 
     return points
@@ -366,7 +377,7 @@ def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
             value = energy_density(k, x, y, z)
             bucket_value = int(floor(256 * value))
             if(bucket_value > 255 or bucket_value < 0):
-                print i, j, bucket_value
+                eprint('overflow: %s,%s : %s' % (i, j, bucket_value))
                 bucket_value = 255
             points.append(bucket_value)
 
@@ -388,7 +399,7 @@ def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):
             value = energy_density(k, x, y, z)
             bucket_value = int(floor(256 * value))
             if(bucket_value > 255 or bucket_value < 0):
-                print i, j, bucket_value
+                eprint('overflow: %s,%s : %s' % (i, j, bucket_value))
                 bucket_value = 255
             points.append(bucket_value)
 
@@ -432,14 +443,6 @@ def test_timing(k, x1, x2, x3):
     C = ddgrams211(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
 
     t5= time.time()
-
-
-    print str(t1-t0)
-    print str(t2-t1)
-    print str(t3-t2)
-    print str(t4-t3)
-    print str(t5-t4)
-
     return A, B, C
 
 def write_point_to_file(points, filename):

@@ -13,15 +13,20 @@ def eprint(*args, **kwargs):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('k', type=float)
-    parser.add_argument('x0', type=float)
-    parser.add_argument('x1', type=float)
-    parser.add_argument('y0', type=float)
-    parser.add_argument('y1', type=float)
+    parser.add_argument('xmax', type=float)
+    parser.add_argument('ymax', type=float)
     parser.add_argument('z', type=float)
     parser.add_argument('partition_size', type=int)
     args = parser.parse_args()
 
-    arglist = (args.k, args.x0, args.x1, args.y0, args.y1, args.z, args.partition_size)
+    # Calculate x0, y0
+    # Because we need to reflect across the axes, the minimum point is half
+    # the distance between the points on the lattice.
+    mp = 1./ (args.partition_size * 2)
+    x0 = mp * args.xmax
+    y0 = mp * args.ymax
+
+    arglist = (args.k, x0, args.xmax, y0, args.ymax, args.z, args.partition_size)
 
     eprint ("Rendering XY [k=%s, x0=%s, x1=%s, y0=%s, y1=%s, z=%s, partition=%s]" % arglist) 
 
