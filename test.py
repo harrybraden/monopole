@@ -25,6 +25,9 @@ from energy_density import energy_density, calc_zeta, calc_eta, calc_abel, calc_
      is_awc_branch_point, write_point_to_file
 from energy_density_old import energy_density_old
 
+directory = "~/Desktop/numerical monopoles/python_results/"
+
+
 
 # The files above are common in a calculation. They are calculated once and used numerous times.
 # The file below is essentially the very long line and whose speed is the question.
@@ -152,8 +155,9 @@ def test_timing(k, x1, x2, x3):
 
 A = time.time()
 
-p = energy_density_on_xy_plane(0.4, 0.1, 3.1, 0.1, 3.1, 0.2, 100)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
-write_point_to_file(p , 'example_xy_4_3_2')
+p = energy_density_on_xy_plane(0.75, 0.1, 3.1, 0.1, 3.1, 0.2, 100)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+filename= (directory + 'example_xy_75_3_2')
+write_point_to_file(p ,filename )
 
 B =time.time()
 print str(B-A)

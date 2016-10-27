@@ -192,11 +192,14 @@ def is_awc_branch_point(k, x1, x2, x3):   # This will test if we get a branch po
 
 def energy_density(k, x1, x2, x3):
 
+    maxint =256                     # This determines the digits being returned
+    maxintr = maxint -1
+
     if (is_awc_multiple_root(k, x1, x2, x3) ):
-        return float(255)/float(256)
+        return float(maxintr)/float(maxint)
 
     if (is_awc_branch_point(k, x1, x2, x3) ):
-        return float(255)/float(256)
+        return float(maxintr)/float(maxint)
 
     zeta = calc_zeta(k ,x1, x2, x3)
     eta = calc_eta(k, x1, x2, x3)
@@ -332,6 +335,9 @@ def energy_density_at_origin(k):
 
 def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
 
+    maxint =256                     # This determines the digits being returned
+    maxintr = maxint -1
+
     x_step = (x1 - x0) / partition_size
     y_step = (y1 - y0) / partition_size
 
@@ -343,16 +349,19 @@ def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
             y = y0 + j * y_step
 
             value = energy_density(k, x, y, z)
-            bucket_value = int(floor(256 * value))
-            if(bucket_value > 255 or bucket_value < 0):
+            bucket_value = int(floor(maxint * value))
+            if(bucket_value > maxintr or bucket_value < 0):
                 print i, j, bucket_value
-                bucket_value = 255
+                bucket_value = maxintr
             points.append(bucket_value)
 
 
     return points
 
 def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
+
+    maxint =256                     # This determines the digits being returned
+    maxintr = maxint -1
 
     y_step = (y1 - y0) / partition_size
     z_step = (z1 - z0) / partition_size
@@ -364,16 +373,19 @@ def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
             z = z0 + j * z_step
 
             value = energy_density(k, x, y, z)
-            bucket_value = int(floor(256 * value))
-            if(bucket_value > 255 or bucket_value < 0):
+            bucket_value = int(floor(maxint * value))
+            if(bucket_value > maxintr or bucket_value < 0):
                 print i, j, bucket_value
-                bucket_value = 255
+                bucket_value = maxintr
             points.append(bucket_value)
 
 
     return points
 
 def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):
+
+    maxint =256                     # This determines the digits being returned
+    maxintr = maxint -1
 
     x_step = (x1 - x0) / partition_size
     z_step = (z1 - z0) / partition_size
@@ -386,10 +398,10 @@ def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):
             z = z0 + j * z_step
 
             value = energy_density(k, x, y, z)
-            bucket_value = int(floor(256 * value))
-            if(bucket_value > 255 or bucket_value < 0):
+            bucket_value = int(floor(maxint * value))
+            if(bucket_value > maxintr or bucket_value < 0):
                 print i, j, bucket_value
-                bucket_value = 255
+                bucket_value = maxintr
             points.append(bucket_value)
 
 
