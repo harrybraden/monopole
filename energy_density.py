@@ -31,6 +31,10 @@ import time
 import math
 import os
 
+maxint = 256                     # This determines the digits being returned
+maxintr = maxint -1
+
+
 from python_expressions.dexp import dexp
 from python_expressions.dmus import dmus
 from python_expressions.dzetas import dzetas
@@ -190,10 +194,7 @@ def is_awc_branch_point(k, x1, x2, x3):   # This will test if we get a branch po
 
     return False
 
-def energy_density(k, x1, x2, x3):
-
-    maxint =256                     # This determines the digits being returned
-    maxintr = maxint -1
+def energy_density(k, x1, x2, x3):   # If there is a multiple root or branch point a value of maxint-1 will be returned; maxint is globally set.
 
     if (is_awc_multiple_root(k, x1, x2, x3) ):
         return float(maxintr)/float(maxint)
@@ -333,10 +334,7 @@ def energy_density_at_origin(k):
 
     return A.real
 
-def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
-
-    maxint =256                     # This determines the digits being returned
-    maxintr = maxint -1
+def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):  # If this falls outside of [0,1) an value of maxint-1 will be returned; maxint is globally set.
 
     x_step = (x1 - x0) / partition_size
     y_step = (y1 - y0) / partition_size
@@ -358,10 +356,7 @@ def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):
 
     return points
 
-def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
-
-    maxint =256                     # This determines the digits being returned
-    maxintr = maxint -1
+def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):   # If this falls outside of [0,1) an value of maxint-1 will be returned; maxint is globally set.
 
     y_step = (y1 - y0) / partition_size
     z_step = (z1 - z0) / partition_size
@@ -382,10 +377,7 @@ def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):
 
     return points
 
-def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):
-
-    maxint =256                     # This determines the digits being returned
-    maxintr = maxint -1
+def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):   # If this falls outside of [0,1) an value of maxint-1 will be returned; maxint is globally set.
 
     x_step = (x1 - x0) / partition_size
     z_step = (z1 - z0) / partition_size
