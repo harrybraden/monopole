@@ -1,4 +1,4 @@
-from __future__ import print_function
+# from __future__ import print_function
 
 #  This file will calculate the energy_density for a point (x1, x2, x3) of space and a parameter k (between 0 and 1)
 #
@@ -88,8 +88,8 @@ from modified_expressions.ddphis312 import ddphis312
 # from modified_expressions.ddphis321 import ddphis321
 from modified_expressions.ddphis322 import ddphis322
 
-def eprint(*args, **kwargs):
-        print(*args, file=sys.stderr, **kwargs)
+# def eprint(*args, **kwargs):
+#         print(*args, file=sys.stderr, **kwargs)
 
 def quartic_roots(k, x1, x2, x3):
     K = complex128(ellipk(k**2))
@@ -349,8 +349,8 @@ def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):  # If this
     points = []
 
     for j in xrange(0, partition_size):
-        if j % 10 == 0 and j > 0:
-            eprint("- rendered %s lines..." % j)
+        # if j % 10 == 0 and j > 0:
+        #     eprint("- rendered %s lines..." % j)
 
         for i in xrange(0, partition_size):
             x = x0 + i * x_step

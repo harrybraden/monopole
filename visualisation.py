@@ -6,6 +6,9 @@ import array_tools
 import smoothing_tools
 import matplotlib.pyplot as plt
 import argparse
+import colormaps as cmaps
+
+plt.register_cmap(name='viridis', cmap=cmaps.viridis)
 
 def load(path):
     fo = open(os.path.expanduser(path), 'rb')
@@ -24,5 +27,5 @@ if __name__ == "__main__":
     reflected = array_tools.reflect_symmetries(data)
 
     plt.title(args.file)
-    imgplot = plt.imshow(reflected, interpolation='none', cmap=plt.get_cmap('viridis'), vmin=0, vmax=255)
+    imgplot = plt.imshow(reflected, interpolation='none', cmap=plt.get_cmap('viridis'), vmin=0, vmax=180)
     plt.savefig(args.file + '.png')

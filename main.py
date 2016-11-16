@@ -7,6 +7,8 @@ import sys
 
 __author__ = 'peterbraden'
 
+# MONOPOLE_OUTPUT="~/Desktop/numerical monopoles/python_results/""
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
@@ -34,7 +36,9 @@ if __name__ == "__main__":
     p = energy_density_on_xy_plane(*arglist)
     t_end = time.time()
 
-    directory = os.environ['MONOPOLE_OUTPUT'] or './data'
+    # directory = os.environ['MONOPOLE_OUTPUT'] or './data'
+    directory = "~/Desktop/numerical monopoles/python_results/"
+
     filename= (directory + 'xy_%s_%s-%s_%s-%s_%s_%s' % arglist)
     write_point_to_file(p , filename)
 
