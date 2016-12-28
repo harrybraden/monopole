@@ -1,4 +1,7 @@
-var UNIT = 100
+var UNIT = 60
+var KVAL = 30
+var INTENSITY = 0.5
+var DATA = null
 
 var scene = new THREE.Scene()
   , camera = new THREE.PerspectiveCamera(
@@ -12,7 +15,7 @@ camera.lookAt(0,0,0)
 
 
 var drawDebug = function(){
-  scene.background = new THREE.Color( 0xbbbbbb );
+  scene.background = new THREE.Color( 0x333333 );
   var geometry = new THREE.BoxGeometry( 3, 3, 3 );
   var origin = new THREE.Mesh( 
                       geometry,
@@ -27,18 +30,19 @@ var drawDebug = function(){
   scene.add(up);
 }
 
-var drawImagePlane = function(img, z, k){
-  var array = new Uint8Array(img.data.buffer) // chrome bug
+var drawImagePlane = function(buf, z, k){
   var texture = new THREE.DataTexture(
-                      array,
-                      img.width,
-                      img.height,
-                      THREE.RGBAFormat//THREE.UnsignedByteType
+                      buf,
+                      60,
+                      60,
+                      THREE.RGBAFormat
                     )
   var material = new THREE.MeshBasicMaterial( { 
-    //map: texture,
-    color: 'blue',
-    alphaMap: texture
+    map: texture,
+    //color: 'blue',
+    transparent: true,
+    alphaMap: texture,
+    alphaTest: INTENSITY
   } )
 
   texture.needsUpdate = true
@@ -56,22 +60,22 @@ var drawImagePlane = function(img, z, k){
   planeTL.rotateY(Math.PI)
   planeTL.translateX(UNIT/2)
   planeTL.translateY(UNIT/2)
-  planeTL.translateZ(-z)
+  planeTL.translateZ(-z )
 
   planeBL.rotateY(Math.PI)
   planeBL.rotateX(Math.PI)
   planeBL.translateX(UNIT/2)
   planeBL.translateY(UNIT/2)
-  planeBL.translateZ(z)
+  planeBL.translateZ(z )
   
   planeBR.rotateX(Math.PI)
   planeBR.translateX(UNIT/2)
   planeBR.translateY(UNIT/2)
-  planeBR.translateZ(-z)
+  planeBR.translateZ(-z )
 
   planeTR.translateX(UNIT/2)
   planeTR.translateY(UNIT/2)
-  planeTR.translateZ(z)
+  planeTR.translateZ(z )
 
   scene.add(planeTL);
   scene.add(planeTR);
@@ -79,9 +83,35 @@ var drawImagePlane = function(img, z, k){
   scene.add(planeBR);
 }
 
+var _animationState = {}
+
 function animate() {
+  var ctx = DATA
+
+  // If same params, skip
+  if (_animationState.k == KVAL &&
+      _animationState.intensity == INTENSITY){
     renderer.render(scene, camera);
     requestAnimationFrame( animate );
+    return
+  }
+  console.log('.', KVAL, INTENSITY)
+  _animationState.k = KVAL
+  _animationState.intensity = INTENSITY
+
+  while (scene.children.length) {
+      scene.remove(scene.children[0]);
+  }
+
+  drawDebug()
+  for (var z = 0; z < 60; z++) {
+    var data = getDataFor(ctx, z, KVAL)
+    drawImagePlane(data, z, KVAL)
+    drawImagePlane(data, -z, KVAL)
+  }
+
+  renderer.render(scene, camera);
+  requestAnimationFrame( animate );
 }
 
 var loadData = function(cb){
@@ -99,11 +129,15 @@ var loadData = function(cb){
 }
 
 var getDataFor = function(ctx, z, k) {
-  var data = ctx.getImageData(k * 60, z*60 , 60, 60);
+  var imdata = ctx.getImageData(k * 60, z*60 , 60, 60);
+  var data = imdata.data
 
-  var res = new Uint8Array(60*60)
+  var res = new Uint8Array(60*60*4)
   for (var i = 0; i < 60*60; i++){
-    res[i] = data[i*4]
+    res[i*4]     = data[i*4] // r
+    res[i*4 + 1] = data[i*4 + 1] // g
+    res[i*4 + 2] = data[i*4 + 2] // b
+    res[i*4 + 3] = data[i*4 + 3] // a
   }
   return res
 
@@ -115,14 +149,21 @@ function init() {
     var ambientLight = new THREE.AmbientLight(0x555555);
     scene.add(ambientLight);
 
+    controls = new THREE.OrbitControls(camera, renderer.domElement)
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
-    animate()
+
+    document.getElementById('k').onchange = function(e){
+      KVAL=e.target.value
+    }
+    document.getElementById('intensity').onchange = function(e){
+      INTENSITY=e.target.value
+    }
+
 }
 
 loadData(function(ctx){
+  DATA = ctx
   init()
-  var data = ctx.getImageData(0, 0, 60, 60);
-  drawDebug()
-  drawImagePlane(data, -10, 0)
+  animate()
 })
