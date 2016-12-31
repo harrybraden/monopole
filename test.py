@@ -12,8 +12,10 @@ import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
 from numpy import roots, complex64, conj, pi, sqrt, sum, trace, linalg, matmul, array
 import math
+from array_tools import get_point_tuples
 
 from higgs_squared import higgs_squared
+
 
 # from energy_density_old import calc_zeta, calc_eta, calc_abel, calc_mu, energy_density_old, order_roots, quartic_roots
 from python_expressions.dmus import dmus
@@ -25,9 +27,15 @@ from energy_density import energy_density, calc_zeta, calc_eta, calc_abel, calc_
      is_awc_branch_point, write_point_to_file
 from energy_density_old import energy_density_old
 
+from python_expressions.grams import grams
+from modified_expressions.dgrams1 import dgrams1
+from modified_expressions.dgrams2 import dgrams2
+from modified_expressions.dgrams3 import dgrams3
+
+
 # Some global variables.
 
-directory = "~/Desktop/numerical monopoles/python_results/"
+directory = "~/Desktop/numerical monopoles/exceptional/"
 
 
 # The files above are common in a calculation. They are calculated once and used numerous times.
@@ -144,7 +152,7 @@ def test_timing(k, x1, x2, x3):
 
 # print energy_density(0.8, 1.0, 0, 2.35)
 
-# p = energy_density_on_xy_plane(0.8, 0.1, 3.1, 0.1, 3.1, 0.1, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
+# p = energy_density_on_xy_plane(0.75, 0.025, 3.025, 0.025, 3.025, 1.0 , 60)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
 #
 # write_point_to_file(p, 'example_xy_8_3_1')
 #
@@ -154,14 +162,14 @@ def test_timing(k, x1, x2, x3):
 #     p = energy_density_on_xy_plane(0.2, 0.1, 3.1, 0.1, 3.1, z, 40)   # k, x-initial x-final, y-initial, y-final, z, partition size=no points between initial final
 #     write_point_to_file(p , 'example_xy_2_3_' +str(i))
 
-A = time.time()
-
-p = energy_density_on_xy_plane(0.75, 0.1, 3.1, 0.1, 3.1, 0.2, 10)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
-filename= (directory + 'example_xy_75_3_2')
-write_point_to_file(p ,filename )
-
-B =time.time()
-print str(B-A)
+# A = time.time()
+#
+# p = energy_density_on_xy_plane(0.80, 0.95, 1.05, 0.025, 3.025, 3.0 , 20)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+# filename= (directory + 'example_xy_80')
+# write_point_to_file(p ,filename )
+#
+# B =time.time()
+# print str(B-A)
 
 
 # for i in range(0, 17):
@@ -210,20 +218,29 @@ print str(B-A)
 #
 
 
-# k  = 0.8
-# x1 = 1.0
-# x2 = 0.00
-# x3 = 0.0
-#
-# k1 = sqrt(1-k**2)
-# a=k1+complex(0, 1)*k
-# b=k1-complex(0, 1)*k
+k  = 0.8
+K = complex64(ellipk(k**2))
+x1 = K/2
+x2 = 0.02
+x3 = 2.0
+
+k1 = sqrt(1-k**2)
+a=k1+complex(0, 1)*k
+b=k1-complex(0, 1)*k
 
 
-# zeta = calc_zeta(k ,x1, x2, x3)
-# eta = calc_eta(k, x1, x2, x3)
-# abel = calc_abel(k, zeta, eta)
-# mu = calc_mu(k, x1, x2, x3, zeta, abel)
+zeta = calc_zeta(k ,x1, x2, x3)
+eta = calc_eta(k, x1, x2, x3)
+abel = calc_abel(k, zeta, eta)
+mu = calc_mu(k, x1, x2, x3, zeta, abel)
+x=[x1,x2,x3]
+
+DM = dmus(zeta, x, k)
+DZ = dzetas(zeta, x,k)
+DDM = ddmus(zeta, x, k)
+DDZ = ddzetas(zeta, x,k)
+
+
 #
 # lambda_test = map(lambda zetai : \
 #                     complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))), \
@@ -231,20 +248,44 @@ print str(B-A)
 # print zeta
 # print lambda_test
 
-# for i in range(0, 7, 1):
-#     x1 = 0.97+float(i)*0.01
-#     zeta = calc_zeta(k ,x1, x2, x3)
-#     # print x1, map(lambda zetai :  complex(0, 1) * 1/(complex64(ellipk(k**2))*2*b) *\
-#     #                              complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))),\
-#     #             zeta)
-#     print x1, zeta[0], map(lambda zetai :  complex(0, 1) * 1/(complex64(ellipk(k**2))*2*b) * \
-#                            complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))),zeta)[0]
+# for i in range(1, 7, 1):
+#     x2 = float(i)*0.001
+#
+#     print x2
+#
+#     print higgs_squared(k,x1,x2,x3)
+#
+#     print energy_density(k,x1, x2,x3)
 
+    # print x1, map(lambda zetai :  complex(0, 1) * 1/(complex64(ellipk(k**2))*2*b) *\
+    #                              complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))),\
+    #             zeta)
+    # print x1 , zeta[0], map(lambda zetai :  complex(0, 1) * 1/(complex64(ellipk(k**2))*2*b) * \
+              #             complex64(ellipf( asin( (zetai )/a), mfrom(k=a/b))),zeta)[0]
 
+# print x1
 # print zeta
 # print eta
 # print abel
 # print mu
+# print higgs_squared(k,x1,x2,x3)
+# print DM
+# print DDM
+# print DZ
+# print DDZ
+# print grams(zeta, mu, [x1, x2, x3], k)
+#
+# # print phis(zeta, mu, [x1, x2, x3], k)
+# print energy_density(k,x1,x2,x3)
+# print '\n'
+#
+# print DZ
+# print '\n'
+#
+# print calc_zeta(k ,x1, 0.0, x3)
+# print energy_density(k,x1,0.0,x3)
+
+
 #
 #
 # print higgs_squared(k,x1,x2,x3)
@@ -275,3 +316,99 @@ print str(B-A)
 # print naming("example_xy_8_3_1")
 
 
+maxint = 256                     # This determines the digits being returned
+maxintr = maxint -1
+
+
+def higgs_squared_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):  # If this falls outside of [0,1) an value of maxint-1 will be returned; maxint is globally set.
+
+    x_step = (x1 - x0) / partition_size
+    y_step = (y1 - y0) / partition_size
+
+    points = []
+
+    for j in xrange(0, partition_size):
+        # if j % 10 == 0 and j > 0:
+        #     eprint("- rendered %s lines..." % j)
+
+        for i in xrange(0, partition_size):
+            x = x0 + i * x_step
+            y = y0 + j * y_step
+
+            value = higgs_squared(k, x, y, z)
+            bucket_value = int(floor(maxint * value))
+            if(bucket_value > maxintr or bucket_value < 0):
+                print i, j, bucket_value
+                bucket_value = maxintr
+            points.append(bucket_value)
+
+def higgs_squared_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):   # If this falls outside of [0,1) an value of maxint-1 will be returned; maxint is globally set.
+
+    y_step = (y1 - y0) / partition_size
+    z_step = (z1 - z0) / partition_size
+
+    points = []
+    for j in range(0, partition_size):
+        for i in range(0, partition_size):
+            y = y0 + i * y_step
+            z = z0 + j * z_step
+
+            value = higgs_squared(k, x, y, z)
+            bucket_value = int(floor(maxint * value))
+            if(bucket_value > maxintr or bucket_value < 0):
+                print i, j, bucket_value
+                bucket_value = maxintr
+            points.append(bucket_value)
+
+
+    return points
+
+
+    return points
+
+# p = energy_density_on_xy_plane(0.85, 1.0, 1.1, 0.025, 3.025, 3.0 , 20)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+# filename= (directory + 'example_xy_85')
+# write_point_to_file(p ,filename )
+#
+# ph = higgs_squared_on_xy_plane(0.85, 1.0, 1.1, 0.025, 3.025, 3.0 , 20)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+# filename= (directory + 'higgs_xy_85')
+# write_point_to_file(ph ,filename )
+
+# p = energy_density_on_yz_plane(0.8, 0.025, 3.025, 0.025, 3.025, K/2 , 60)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
+# filename= (directory + 'example_yz_80')
+# write_point_to_file(p ,filename )
+
+def test_higgs_exceptional(k):
+    kk = "%1.2f" % k
+
+    points = get_point_tuples(kk, 253, 256)
+
+    exceptional=[]
+
+    for p in points:
+        value = higgs_squared(k, p[1], p[0], p[2])
+        if (value > 1.0 or value <0.0):
+            exceptional.append(p)
+
+    write_file = '/Users/hwb/Desktop/numerical monopoles/formaple/higgs_' + str(kk)  +'.txt'
+
+    fo = open(os.path.expanduser(write_file), 'w+')
+    for i, point in enumerate(points):
+        point_string =  str(point[0]) +' '+ str(point[1]) + ' ' + str(point[2]) +'\n'
+        if (i != (len(points) - 1)):
+            point_string = point_string
+        fo.write(point_string)
+
+    fo.close()
+
+    return
+
+test_higgs_exceptional(0.90)
+
+
+# def test_print(k):
+#     kk = "%1.2f" % k
+#     print  '/Users/hwb/Desktop/numerical monopoles/formaple/higgs_' + str(kk)  +'.txt'
+#
+#
+# test_print(0.92)

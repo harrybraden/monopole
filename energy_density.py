@@ -203,134 +203,138 @@ def is_awc_branch_point(k, x1, x2, x3):   # This will test if we get a branch po
 
 def energy_density(k, x1, x2, x3):   # If there is a multiple root or branch point a value of maxint-1 will be returned; maxint is globally set.
 
-    if (is_awc_multiple_root(k, x1, x2, x3) ):
-        return float(maxintr)/float(maxint)
+    try:
+        if (is_awc_multiple_root(k, x1, x2, x3) ):
+            return float(maxintr)/float(maxint)
 
-    if (is_awc_branch_point(k, x1, x2, x3) ):
-        return float(maxintr)/float(maxint)
+        if (is_awc_branch_point(k, x1, x2, x3) ):
+            return float(maxintr)/float(maxint)
 
-    zeta = calc_zeta(k ,x1, x2, x3)
-    eta = calc_eta(k, x1, x2, x3)
-    abel = calc_abel(k, zeta, eta)
-    mu = calc_mu(k, x1, x2, x3, zeta, abel)
-    x=[x1,x2,x3]
+        zeta = calc_zeta(k ,x1, x2, x3)
+        eta = calc_eta(k, x1, x2, x3)
+        abel = calc_abel(k, zeta, eta)
+        mu = calc_mu(k, x1, x2, x3, zeta, abel)
+        x=[x1,x2,x3]
 
-    K = complex64(ellipk(k**2))
+        K = complex64(ellipk(k**2))
 
-    E = complex64(ellipe(k**2))
+        E = complex64(ellipe(k**2))
 
-    cm= (2*E-K)/K
+        cm= (2*E-K)/K
 
-    k1 = sqrt(1-k**2)
+        k1 = sqrt(1-k**2)
 
-    xp = x[0]+complex(0,1)*x[1]
-    xm = x[0]-complex(0,1)*x[1]
-    S =  sqrt(K**2-4*xp*xm)
-    SP = sqrt(K**2-4*xp**2)
-    SM = sqrt(K**2-4*xm**2)
-    SPM = sqrt(-k1**2*(K**2*k**2-4*xm*xp)+(xm-xp)**2)
-    R = 2*K**2*k1**2-S**2-8*x[2]**2
-    RM = complex(0,1)*SM**2*(xm*(2*k1**2-1)+xp)-(16*complex(0,1))*xm*x[2]**2
-    RP = complex(0,1)*SM**2*(xp*(2*k1**2-1)+xm)+(16*complex(0,1))*xp*x[2]**2
-    RMBAR=-complex(0,1)*SP**2*( xp*(2*k1**2-1)+xm ) +16*complex(0,1)*xp*x[2]**2
-    RPBAR=-complex(0,1)*SP**2*( xm*(2*k1**2-1)+xp ) -16*complex(0,1)*xm*x[2]**2
-    r=sqrt(x[0]**2+x[1]**2+x[2]**2)
+        xp = x[0]+complex(0,1)*x[1]
+        xm = x[0]-complex(0,1)*x[1]
+        S =  sqrt(K**2-4*xp*xm)
+        SP = sqrt(K**2-4*xp**2)
+        SM = sqrt(K**2-4*xm**2)
+        SPM = sqrt(-k1**2*(K**2*k**2-4*xm*xp)+(xm-xp)**2)
+        R = 2*K**2*k1**2-S**2-8*x[2]**2
+        RM = complex(0,1)*SM**2*(xm*(2*k1**2-1)+xp)-(16*complex(0,1))*xm*x[2]**2
+        RP = complex(0,1)*SM**2*(xp*(2*k1**2-1)+xm)+(16*complex(0,1))*xp*x[2]**2
+        RMBAR=-complex(0,1)*SP**2*( xp*(2*k1**2-1)+xm ) +16*complex(0,1)*xp*x[2]**2
+        RPBAR=-complex(0,1)*SP**2*( xm*(2*k1**2-1)+xp ) -16*complex(0,1)*xm*x[2]**2
+        r=sqrt(x[0]**2+x[1]**2+x[2]**2)
 
-    DM = dmus(zeta, x, k)
-    DZ = dzetas(zeta, x,k)
-    DDM = ddmus(zeta, x, k)
-    DDZ = ddzetas(zeta, x,k)
+        DM = dmus(zeta, x, k)
+        DZ = dzetas(zeta, x,k)
+        DDM = ddmus(zeta, x, k)
+        DDZ = ddzetas(zeta, x,k)
 
-    GNUM = grams(zeta, mu, [x1, x2, x3], k)
+        GNUM = grams(zeta, mu, [x1, x2, x3], k)
 
-    inv_gram = matrix(GNUM).I
+        inv_gram = matrix(GNUM).I
 
-    higgs = phis(zeta, mu, [x1, x2, x3], k)
+        higgs = phis(zeta, mu, [x1, x2, x3], k)
 
-    DGS1 = dgrams1(zeta, mu, DM, DZ, x, k)
+        DGS1 = dgrams1(zeta, mu, DM, DZ, x, k)
 
-    DGS2 = dgrams2(zeta, mu, DM, DZ, x, k)
+        DGS2 = dgrams2(zeta, mu, DM, DZ, x, k)
 
-    DGS3 = dgrams3(zeta, mu, DM, DZ, x, k)
+        DGS3 = dgrams3(zeta, mu, DM, DZ, x, k)
 
 
-    # Using the hermiticity properties its faster to evaluate the matrix entries just once and so if we evaluate
-    # the *12 element the *21 is minus the conjugate of this
-    # DHS1 = mat([[ dphis111(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis112(zeta, mu, DM, DZ, [x1, x2, x3], k)],
-    #            [ dphis121(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis122(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
+        # Using the hermiticity properties its faster to evaluate the matrix entries just once and so if we evaluate
+        # the *12 element the *21 is minus the conjugate of this
+        # DHS1 = mat([[ dphis111(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis112(zeta, mu, DM, DZ, [x1, x2, x3], k)],
+        #            [ dphis121(zeta, mu, DM, DZ, [x1, x2, x3], k), dphis122(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    DH112 = dphis112(zeta, mu, DM, DZ, [x1, x2, x3], k)
+        DH112 = dphis112(zeta, mu, DM, DZ, [x1, x2, x3], k)
 
-    DHS1 = mat([[ dphis111(zeta, mu, DM, DZ, [x1, x2, x3], k), DH112   ],
-                [ -conj(DH112), dphis122(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
+        DHS1 = mat([[ dphis111(zeta, mu, DM, DZ, [x1, x2, x3], k), DH112   ],
+                    [ -conj(DH112), dphis122(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    DH212 = dphis212(zeta, mu, DM, DZ, [x1, x2, x3], k)
+        DH212 = dphis212(zeta, mu, DM, DZ, [x1, x2, x3], k)
 
-    DHS2 = mat([[ dphis211(zeta, mu, DM, DZ, [x1, x2, x3], k), DH212   ],
-                [ -conj(DH212), dphis222(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
+        DHS2 = mat([[ dphis211(zeta, mu, DM, DZ, [x1, x2, x3], k), DH212   ],
+                    [ -conj(DH212), dphis222(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    DH312 = dphis312(zeta, mu, DM, DZ, [x1, x2, x3], k)
+        DH312 = dphis312(zeta, mu, DM, DZ, [x1, x2, x3], k)
 
-    DHS3 = mat([[ dphis311(zeta, mu, DM, DZ, [x1, x2, x3], k), DH312   ],
-                [ -conj(DH312), dphis322(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
+        DHS3 = mat([[ dphis311(zeta, mu, DM, DZ, [x1, x2, x3], k), DH312   ],
+                    [ -conj(DH312), dphis322(zeta, mu, DM, DZ, [x1, x2, x3], k)]])
 
-    DDGS112 = ddgrams112(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
+        DDGS112 = ddgrams112(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
 
-    DDGS1 = mat([[ ddgrams111(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS112 ],
-                 [ -conj(DDGS112), ddgrams122(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
+        DDGS1 = mat([[ ddgrams111(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS112 ],
+                     [ -conj(DDGS112), ddgrams122(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
 
-    DDGS212 = ddgrams212(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
+        DDGS212 = ddgrams212(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
 
-    DDGS2 = mat([[ ddgrams211(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS212 ],
-                 [ -conj(DDGS212) , ddgrams222(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
+        DDGS2 = mat([[ ddgrams211(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS212 ],
+                     [ -conj(DDGS212) , ddgrams222(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
 
-    DDGS312 = ddgrams312(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
+        DDGS312 = ddgrams312(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)
 
-    DDGS3 = mat([[ ddgrams311(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS312 ],
-                 [ -conj(DDGS312), ddgrams322(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
+        DDGS3 = mat([[ ddgrams311(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k), DDGS312 ],
+                     [ -conj(DDGS312), ddgrams322(zeta, mu, DM, DZ, DDM, DDZ, [x1, x2, x3], k)]])
 
-    DDHS111 = ddphis111(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    DDHS112 = ddphis112(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    # DDHS121 = ddphis121(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    DDHS122 = ddphis122(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS111 = ddphis111(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS112 = ddphis112(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        # DDHS121 = ddphis121(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS122 = ddphis122(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
 
-    DDHS1 = mat( [[DDHS111, DDHS112], [ -conj(DDHS112),DDHS122]])
+        DDHS1 = mat( [[DDHS111, DDHS112], [ -conj(DDHS112),DDHS122]])
 
-    DDHS211 = ddphis211(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    DDHS212 = ddphis212(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    # DDHS221 = ddphis221(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    DDHS222 = ddphis222(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS211 = ddphis211(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS212 = ddphis212(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        # DDHS221 = ddphis221(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS222 = ddphis222(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
 
-    DDHS2 = mat( [[DDHS211, DDHS212], [-conj(DDHS212),DDHS222]])
+        DDHS2 = mat( [[DDHS211, DDHS212], [-conj(DDHS212),DDHS222]])
 
-    DDHS311 = ddphis311(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    DDHS312 = ddphis312(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    # DDHS321 = ddphis321(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
-    DDHS322 = ddphis322(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS311 = ddphis311(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS312 = ddphis312(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        # DDHS321 = ddphis321(zeta, mu,DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
+        DDHS322 = ddphis322(zeta, mu, DM, DZ, DDM,  DDZ, [x1, x2, x3], k)
 
-    DDHS3 = mat( [[DDHS311, DDHS312], [-conj(DDHS312),DDHS322]])
+        DDHS3 = mat( [[DDHS311, DDHS312], [-conj(DDHS312),DDHS322]])
 
-    ed1 = trace(matmul( matmul(DDHS1, inv_gram) -2* matmul( matmul(DHS1 , inv_gram), matmul(DGS1, inv_gram)) \
-                        + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS1), matmul(inv_gram, DGS1)), inv_gram)  - matmul(matmul(inv_gram, DDGS1), inv_gram)),
-                        matmul(higgs,inv_gram)) ) \
-          + trace( matmul(matmul(DHS1, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS1, inv_gram)),
-                          matmul(DHS1, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS1, inv_gram))))
+        ed1 = trace(matmul( matmul(DDHS1, inv_gram) -2* matmul( matmul(DHS1 , inv_gram), matmul(DGS1, inv_gram)) \
+                            + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS1), matmul(inv_gram, DGS1)), inv_gram)  - matmul(matmul(inv_gram, DDGS1), inv_gram)),
+                            matmul(higgs,inv_gram)) ) \
+              + trace( matmul(matmul(DHS1, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS1, inv_gram)),
+                              matmul(DHS1, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS1, inv_gram))))
 
-    ed2 = trace(matmul( matmul(DDHS2, inv_gram) -2* matmul( matmul(DHS2 , inv_gram), matmul(DGS2, inv_gram)) \
-                        + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS2), matmul(inv_gram, DGS2)), inv_gram)  - matmul(matmul(inv_gram, DDGS2), inv_gram)),
-                        matmul(higgs,inv_gram)) ) \
-          + trace( matmul(matmul(DHS2, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS2, inv_gram)),
-                          matmul(DHS2, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS2, inv_gram))))
+        ed2 = trace(matmul( matmul(DDHS2, inv_gram) -2* matmul( matmul(DHS2 , inv_gram), matmul(DGS2, inv_gram)) \
+                            + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS2), matmul(inv_gram, DGS2)), inv_gram)  - matmul(matmul(inv_gram, DDGS2), inv_gram)),
+                            matmul(higgs,inv_gram)) ) \
+              + trace( matmul(matmul(DHS2, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS2, inv_gram)),
+                              matmul(DHS2, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS2, inv_gram))))
 
-    ed3 = trace(matmul( matmul(DDHS3, inv_gram) -2* matmul( matmul(DHS3 , inv_gram), matmul(DGS3, inv_gram)) \
-                        + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS3), matmul(inv_gram, DGS3)), inv_gram)  - matmul(matmul(inv_gram, DDGS3), inv_gram)),
-                        matmul(higgs,inv_gram)) ) \
-          + trace( matmul(matmul(DHS3, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS3, inv_gram)),
-                          matmul(DHS3, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS3, inv_gram))))
+        ed3 = trace(matmul( matmul(DDHS3, inv_gram) -2* matmul( matmul(DHS3 , inv_gram), matmul(DGS3, inv_gram)) \
+                            + matmul(higgs, matmul( 2* matmul(matmul(inv_gram,DGS3), matmul(inv_gram, DGS3)), inv_gram)  - matmul(matmul(inv_gram, DDGS3), inv_gram)),
+                            matmul(higgs,inv_gram)) ) \
+              + trace( matmul(matmul(DHS3, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS3, inv_gram)),
+                              matmul(DHS3, inv_gram) - matmul(matmul(higgs, inv_gram), matmul(DGS3, inv_gram))))
 
-    # energy_density = -(ed1 + ed2 + ed3).real
+        # energy_density = -(ed1 + ed2 + ed3).real
 
-    return  -(ed1 + ed2 + ed3).real
+        return  -(ed1 + ed2 + ed3).real
+    except:
+         return float(maxintr)/float(maxint)
+
 
 def energy_density_at_origin(k):
     K = complex64(ellipk(k**2))

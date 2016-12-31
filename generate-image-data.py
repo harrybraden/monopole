@@ -65,7 +65,7 @@ def load_data():
         for z in zrange:
             pth = './python_results/k=%.02f/xy_%s_0.025-3.025_0.025-3.025_%s_60' % (k, k, z)
             print  pth
-            dat = smoothed_data(pth)
+            dat = unsmoothed_data(pth)
             flattened = [x for sub in dat for x in sub]
             zres += flattened
 
