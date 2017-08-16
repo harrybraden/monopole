@@ -27,12 +27,17 @@ def convert_file(filename, converted_filename):
     data.tolist()
     smoothed_data = []
 
+    tol =0.04
+
     for i, d in enumerate(data):
 
         smoothed_value = d
         if (d == 0 or i % 60 == 0):
             smoothed_value = smooth_value(i, data)
             # print 'smoothed ' + str(d) + ' to ' + str(smoothed_value)
+
+        if ( (i % 60 > 0) and (i % 60 <59 ) and abs( data[i] -data[i-1] )> tol and abs( data[i+1] -data[i] )> tol ):
+            smoothed_value = smooth_value(i, data)
 
         smoothed_data.append(smoothed_value)
 
