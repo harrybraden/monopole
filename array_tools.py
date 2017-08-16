@@ -1,4 +1,4 @@
-from numpy import sqrt, int
+from numpy import *
 import os
 from os import listdir
 from os.path import isfile, join
@@ -28,7 +28,7 @@ def reconstruct_3d(data):
     return None
 
 def smoothed_image(data):
-    file = "~/Desktop/numerical monopoles/python_results/%s"  % data
+    file = "~/Documents/MonopoleMovie/python_converted/%s"  % data
     # file = "~/Desktop/numerical monopoles/exceptional/%s"  % data
 
     fo = open(os.path.expanduser(file), 'rb')
@@ -81,7 +81,7 @@ def load_slice(file):
 
 def get_z_value(file):
     parts = str.split(file, '_')
-    return float(parts[len(parts) - 2])
+    return float(parts[len(parts) - 1])
 
 def write_point_to_file(points, filename):
     """
@@ -92,7 +92,8 @@ def write_point_to_file(points, filename):
     fo.write(byteArray)
     fo.close()
 
-def get_point_tuples(k, e_min, e_max):
+def get_point_tuples(kk, e_min, e_max):
+    k = "%1.2f" % kk
     points=[]
 
     x0 = 0.025
@@ -103,7 +104,7 @@ def get_point_tuples(k, e_min, e_max):
     dx = (xn - x0) / n
     dy = (yn - y0) / n
 
-    directory = '/Users/hwb/Desktop/numerical monopoles/python_results'
+    directory = '/Users/hwb/Desktop/numerical monopoles/testing_energydensity'
 
     k_directory = directory + '/k=' + str(k) + '/'
     files = [f for f in listdir(k_directory) if isfile(join(k_directory, f))]
@@ -113,13 +114,15 @@ def get_point_tuples(k, e_min, e_max):
 
         z = get_z_value(f)
 
-        for i, xl in enumerate(shaped_list):
-            for j, e in enumerate(xl):
-                if (e > e_min and  e < e_max):
-                    points.append((x0 + i*dx, y0 + j*dy, z))
+        for j, xl in enumerate(shaped_list):
+            for i, e in enumerate(xl):
+                if (e >=e_min and  e <=e_max):
+                    points.append(( x0 + i*dx, y0 + j*dy, z))
     return points
 
+
 def get_max_value(k):
+
     k_directory = directory + '/k=' + k +'/'
 
     files = [f for f in listdir(k_directory) if isfile(join(k_directory, f))]
@@ -134,7 +137,8 @@ def get_max_value(k):
                     max = e
     return max
 
-def get_exceptional_tuples(k):
+def get_exceptional_tuples(kk):
+    k = "%1.2f" % kk
     exceptional = []
 
     x0 = 0.025
@@ -145,7 +149,7 @@ def get_exceptional_tuples(k):
     dx = (xn - x0) / n
     dy = (yn - y0) / n
 
-    directory = '/Users/hwb/Desktop/numerical monopoles/python_results'
+    directory = '/Users/hwb/Desktop/numerical monopoles/testing_energydensity'
 
     k_directory = directory + '/k=' + k +'/'
     files = [f for f in listdir(k_directory) if isfile(join(k_directory, f))]
@@ -155,11 +159,15 @@ def get_exceptional_tuples(k):
 
         z = get_z_value(f)
 
-        for i, xl in enumerate(shaped_list):
-            for j, e in enumerate(xl):
+        for j, xl in enumerate(shaped_list):
+            for i, e in enumerate(xl):
                 if (e == 255):
+                # if (e>230):
                     exceptional.append((x0 + i*dx, y0 + j*dy, z))
     return exceptional
+
+# print get_exceptional_tuples(0.80)
+# print get_point_tuples(0.80,253,256)
 
 def add_symmetric_points(original_points):
     points = []
@@ -289,8 +297,7 @@ def write_point_tuples(k, e_min, e_max):
     # fo.write('}')
     fo.close()
 
-write_point_tuples("0.90",253,256)
-
+# write_point_tuples("0.95",60,80)
 
 
 
