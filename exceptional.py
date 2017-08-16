@@ -117,7 +117,8 @@ def calc_abel(k, zeta, eta):
     return abel
 
 def abel_select(k, abeli, etai):
-    tol = 0.001
+    # tol = 0.001
+    tol = 1.0
 
     if (abs(complex64(calc_eta_by_theta(k, abeli)) - etai) > tol):
         return - abeli - 0.5 * (1 + taufrom(k=k))
@@ -214,7 +215,7 @@ def exceptional(k, x1, x2, x3):   # If there is a multiple root or branch point 
         r=sqrt(x[0]**2+x[1]**2+x[2]**2)
 
         # print zeta, '\n', eta, '\n', abel,  '\n', mu,  '\n', x
-        print mu
+        # print "mu", mu
 
         DM = dmus(zeta, x, k)
         DZ = dzetas(zeta, x,k)
@@ -222,18 +223,20 @@ def exceptional(k, x1, x2, x3):   # If there is a multiple root or branch point 
         DDZ = ddzetas(zeta, x,k)
 
         # print DM
-        print DZ
+        # print "DZ", DZ
         # print DDM
-        print DDZ
+        # print "DDZ", DDZ
 
         GNUM = grams(zeta, mu, [x1, x2, x3], k)
 
         inv_gram = matrix(GNUM).I
 
-        print GNUM
+        # print "gram", GNUM , '\n'
         # print inv_gram
 
         higgs = phis(zeta, mu, [x1, x2, x3], k)
+
+        print "Higgs",  -(trace(matmul( matmul(higgs, inv_gram),  matmul(higgs, inv_gram) )).real)/2, '\n'
 
         DGS1 = dgrams1(zeta, mu, DM, DZ, x, k)
 
@@ -344,10 +347,10 @@ def test_mu(k ,x1, x2, x3):
      return calc_mu(k, x1, x2, x3, zeta, abel)
 
 for i in range(0,3):
-    print test_mu(0.5, 0.82 + float(i)/100., 0.05, 1.5)
+    print exceptional(0.95, 1.225, 0.125, 0.025 + float(i)/20. )
     print '\n'
 
-
-B =time.time()
-
-print str(B-A)
+#
+# B =time.time()
+#
+# print str(B-A)
