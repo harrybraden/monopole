@@ -22,7 +22,7 @@ from python_expressions.dmus import dmus
 from python_expressions.dzetas import dzetas
 from python_expressions.ddmus import ddmus
 from python_expressions.ddzetas import ddzetas
-from energy_density import energy_density, calc_zeta, calc_eta, calc_abel, calc_mu, order_roots, quartic_roots, \
+from energy_density import energy_density, calc_zeta, calc_eta, calc_abel, calc_mu, calc_eta_by_theta, order_roots, quartic_roots, \
      energy_density_on_xy_plane, energy_density_on_yz_plane, energy_density_on_xz_plane, energy_density_at_origin, is_awc_multiple_root, \
      is_awc_branch_point, write_point_to_file
 from energy_density_old import energy_density_old
@@ -366,17 +366,6 @@ def higgs_squared_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):   # If this
 
     return points
 
-# p = energy_density_on_xy_plane(0.85, 1.0, 1.1, 0.025, 3.025, 3.0 , 20)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
-# filename= (directory + 'example_xy_85')
-# write_point_to_file(p ,filename )
-#
-# ph = higgs_squared_on_xy_plane(0.85, 1.0, 1.1, 0.025, 3.025, 3.0 , 20)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
-# filename= (directory + 'higgs_xy_85')
-# write_point_to_file(ph ,filename )
-
-# p = energy_density_on_yz_plane(0.8, 0.025, 3.025, 0.025, 3.025, K/2 , 60)   # k, x-initial z-final, z-initial, y-final, y, partition size=no points between initial final
-# filename= (directory + 'example_yz_80')
-# write_point_to_file(p ,filename )
 
 def test_higgs_exceptional(k):
     kk = "%1.2f" % k
@@ -403,7 +392,7 @@ def test_higgs_exceptional(k):
 
     return
 
-test_higgs_exceptional(0.90)
+# test_higgs_exceptional(0.82)
 
 
 # def test_print(k):
@@ -412,3 +401,57 @@ test_higgs_exceptional(0.90)
 #
 #
 # test_print(0.92)
+
+def zeta_on_line(k, x0, x1, y, z, partition_size):
+
+    x_step = (x1 - x0) / partition_size
+
+    for i in range(0, partition_size):
+        x=x0+i*x_step
+        print calc_zeta(k,x,y,z)
+
+    return
+
+# zeta_on_line(0.82, 0.9, 1.1, 0.075 , 1.775, 50)
+
+# print higgs_squared(0.82, 0.975, 0.075 , 1.775)
+
+def higgs_on_line(k, x0, x1, y, z, partition_size):
+
+    x_step = (x1 - x0) / partition_size
+
+    for i in range(0, partition_size):
+        x=x0+i*x_step
+        print higgs_squared(k,x,y,z)
+
+    return
+
+
+# higgs_on_line(0.82, 0.9, 1.1, 0.075 , 1.775, 50)
+
+
+def test_on_line(k, x0, x1, y, z, partition_size):
+
+    x_step = (x1 - x0) / partition_size
+
+    for i in range(0, partition_size):
+        x=x0+i*x_step
+        zeta = calc_zeta(k ,x, y, z)
+        eta = calc_eta(k, x, y, z)
+        abel = calc_abel(k, zeta, eta)
+        mu = calc_mu(k, x, y, z, zeta, abel)
+        smu =mu[0]+mu[1]+mu[2]+mu[3]
+        print mu[0]+mu[2], mu[1]+mu[3], '\n'
+        print abel[0]+conj(abel[2]), abel[1]+conj(abel[3]), '\n'
+        print - taufrom(k=k)/2
+        for k in range(0,3):
+            tmp= abs(complex64(calc_eta_by_theta(k, abel[k])) - eta[k])
+            print tmp
+
+    return
+
+
+# test_on_line(0.82, 0.9, 1.1, 0.075 , 1.775, 50)
+
+
+test_on_line(0.5, 0.5, 1.1, 0.575 , 0.775, 1)
