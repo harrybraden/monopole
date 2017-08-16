@@ -15,7 +15,7 @@ __author__ = 'hwb'
 #  All functions are then functions of (k, x1, x2, x3) and zeta_i, eta_i, mu_i (i=1..4).
 #
 
-from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj
+from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj, sort_complex
 from math import *
 from cmath import exp
 import time
@@ -41,7 +41,8 @@ def quartic_roots(k, x1, x2, x3):
     e3 = complex128(4*x3*(x2 + j*x1))
     e4 = complex128(x2**2 - x1**2 + 2*j*x1*x2 + 0.25*K**2)
 
-    return roots([e4, e3, e2, e1, e0])
+    return sort_complex(roots([e4, e3, e2, e1, e0]))     # I put the sort_complex to have a canonical form, so that when we order them they will vary continuously
+    # return roots([e4, e3, e2, e1, e0])
 
 
 def order_roots(roots):
@@ -83,7 +84,10 @@ def calc_abel(k, zeta, eta):
     return abel
 
 def abel_select(k, abeli, etai):
-    tol = 0.001
+    # tol = 0.001
+    # tol = 1.0                 # This choice appears quite important to get smoothness. It was too small initially.
+    tol = 0.10                 # This choice appears quite important to get smoothness. It was too small initially.
+
 
     if (abs(complex64(calc_eta_by_theta(k, abeli)) - etai) > tol):
         return - abeli - 0.5 * (1 + taufrom(k=k))
@@ -234,7 +238,7 @@ def write_point_to_file(points, filename):
 
     :rtype : object
     """
-    fo = open(os.path.expanduser("~/Desktop/numerical monopoles/python_results/" + filename), 'wb')
+    fo = open(os.path.expanduser("~/Desktop/numerical monopoles/testing_higgs/" + filename), 'wb')
     byteArray = bytearray(points)
     fo.write(byteArray)
     fo.close()
@@ -277,3 +281,6 @@ def write_point_to_file(points, filename):
 # write_point_to_file(p , 'hwb_xzhiggs_k0001')
 
 # print higgs_squared(0.8, 0.4, 0.3, 0.001)
+
+# k=0.13
+# print k, sqrt( higgs_squared(k, complex64(ellipk(k**2))/2+0.005, 0.0, 0.0) )
