@@ -18,7 +18,7 @@ def convert_file(filename, converted_filename):
             bucketed_value = 0
             # print str(d)
         else:
-            bucketed_value = int(round(256.0 * d/1.6))
+            bucketed_value = int(round(256.0 * d/1.43))
             if (bucketed_value >=256):
                 bucketed_value = 255
 
