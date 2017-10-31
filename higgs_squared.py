@@ -284,3 +284,32 @@ def write_point_to_file(points, filename):
 
 # k=0.13
 # print k, sqrt( higgs_squared(k, complex64(ellipk(k**2))/2+0.005, 0.0, 0.0) )
+
+def higgs_squared_on_x_axis(k_value, x0, x1, partition_size):
+
+    x_step = (x1 - x0) / partition_size
+
+    points = []
+
+    for k in range(0, partition_size):
+        x = x0 + k * x_step
+
+
+        value = higgs_squared(k_value, x, 0.00, 0.00)
+        bucket_value = int(floor(256 * value))
+        if(bucket_value > 255 or bucket_value < 0):
+           print k, bucket_value
+           bucket_value = 255
+        points.append(bucket_value)
+
+
+    return points
+
+# for k in range(0, 100, 1):
+#         x = 0.05 + k * 0.05
+#         print int(floor(256 * higgs_squared(0.5 , x, 0.0, 0.0 ) ))
+
+
+p = higgs_squared_on_x_axis(0.5, 0.05, 5.05, 500)   # k, x-initial x-final, y-initial, y-final, partition size=no points between initial final
+
+write_point_to_file(p , 'hwb_xhiggs_k5')

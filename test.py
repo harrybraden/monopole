@@ -516,12 +516,41 @@ def testing_components_energy_density(k, x1, x2, x3):
 
 # print energy_density_at_origin(0.01)
 
-file = "~/Desktop/numerical monopoles/testing_energydensity/k=0.01/xy_0.01_0.225"
+# file = "~/Desktop/numerical monopoles/testing_energydensity/k=0.01/xy_0.01_0.225"
+#
+# fo   = open(os.path.expanduser(file) )
+#
+# data = numpy.fromfile(fo)
+#
+# print len(data)
+#
+# print data[0]
 
-fo   = open(os.path.expanduser(file) )
+def energy_density_on_x_axis(k_value, x0, x1, partition_size):
 
-data = numpy.fromfile(fo)
+    x_step = (x1 - x0) / partition_size
 
-print len(data)
+    points = []
 
-print data[0]
+    for k in range(0, partition_size):
+        x = x0 + k * x_step
+
+
+        value = energy_density(k_value, x, 0.00, 0.00)
+        bucket_value = int(floor(128 * value))
+        if(bucket_value > 255 or bucket_value < 0):
+            print k, bucket_value
+            bucket_value = 255
+        points.append(bucket_value)
+
+
+    return points
+
+# for k in range(0, 100, 1):
+#         x = 0.05 + k * 0.05
+#         print int(floor(256 * higgs_squared(0.5 , x, 0.0, 0.0 ) ))
+
+
+p = energy_density_on_x_axis(0.99, 0.05, 5.05, 500)   # k, x-initial x-final, y-initial, y-final, partition size=no points between initial final
+
+write_point_to_file(p , 'x_energyd_99')
