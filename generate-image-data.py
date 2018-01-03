@@ -54,7 +54,8 @@ def png_from(pth):
 
 def load_data():
     zrange = arange(0.025, 2.975, 0.05)
-    krange = arange(0.01, 0.99, 0.01)
+    krange = arange(0.01, 0.99, 0.01)       # This is Peter's default. Will try hardfix
+#   krange = arange(0.95,0.96)
 
     im = Image.new('L', (60 * len(krange), 60 * len(zrange)), 'white')
     ims = []
@@ -63,7 +64,8 @@ def load_data():
         zres = []
         zim = Image.new( 'L', (60, 60 * len(zrange)), 'black')
         for z in zrange:
-            pth = './python_results/k=%.02f/xy_%s_0.025-3.025_0.025-3.025_%s_60' % (k, k, z)
+            # pth = './python_results/k=%.02f/xy_%s_0.025-3.025_0.025-3.025_%s_60' % (k, k, z)
+            pth = './python_converted_scaled/k=%.02f/xy_%.02f_%s' % (k, k, z)
             print  pth
             dat = unsmoothed_data(pth)
             flattened = [x for sub in dat for x in sub]

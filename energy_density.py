@@ -25,7 +25,7 @@
 
 __author__ = 'hwb'
 
-from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  matmul, floor
+from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sqrt, sum, trace, linalg, matmul, array, matrix, conj,  matmul, floor, sort_complex
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
@@ -34,11 +34,8 @@ import time
 import math
 import os
 import sys
-
-maxint = 256                     # This determines the digits being returned
-maxintr = maxint -1
-
-
+from array import array
+from files import *
 from python_expressions.dexp import dexp
 from python_expressions.dmus import dmus
 from python_expressions.dzetas import dzetas
@@ -100,7 +97,8 @@ def quartic_roots(k, x1, x2, x3):
     e3 = complex128(4*x3*(x2 + j*x1))
     e4 = complex128(x2**2 - x1**2 + 2*j*x1*x2 + 0.25*K**2)
 
-    return roots([e4, e3, e2, e1, e0])
+    return sort_complex(roots([e4, e3, e2, e1, e0]))     # I put the sort_complex to have a canonical form, so that when we order them they will vary continuously
+    # return roots([e4, e3, e2, e1, e0])
 
 
 def order_roots(roots):
@@ -142,7 +140,8 @@ def calc_abel(k, zeta, eta):
     return abel
 
 def abel_select(k, abeli, etai):
-    tol = 0.001
+    # tol = 0.001
+    tol = 0.1                 # This choice appears quite important to get smoothness. It was too small initially.
 
     if (abs(complex64(calc_eta_by_theta(k, abeli)) - etai) > tol):
         return - abeli - 0.5 * (1 + taufrom(k=k))
@@ -169,8 +168,8 @@ def calc_mu(k, x1, x2, x3, zeta, abel):
 def is_awc_multiple_root(k, x1, x2, x3):   # This will test if there are multiple roots; the analytic derivation assumes they are distinct
     K = complex64(ellipk(k**2))
     k1 = sqrt(1-k**2)
-    tol1 = 0.05
-    tol2 = 0.05
+    tol1 = 0.007
+    tol2 = 0.026
 
     # Two smoothings here. This one is the better
 
@@ -205,10 +204,10 @@ def energy_density(k, x1, x2, x3):   # If there is a multiple root or branch poi
 
     try:
         if (is_awc_multiple_root(k, x1, x2, x3) ):
-            return float(maxintr)/float(maxint)
+            return -1
 
         if (is_awc_branch_point(k, x1, x2, x3) ):
-            return float(maxintr)/float(maxint)
+            return -2
 
         zeta = calc_zeta(k ,x1, x2, x3)
         eta = calc_eta(k, x1, x2, x3)
@@ -333,7 +332,7 @@ def energy_density(k, x1, x2, x3):   # If there is a multiple root or branch poi
 
         return  -(ed1 + ed2 + ed3).real
     except:
-         return float(maxintr)/float(maxint)
+        return -3
 
 
 def energy_density_at_origin(k):
@@ -360,11 +359,23 @@ def energy_density_on_xy_plane(k, x0, x1, y0, y1, z, partition_size):  # If this
             x = x0 + i * x_step
             y = y0 + j * y_step
 
+            # value = energy_density(k, x, y, z)
+            # if(value > 4):
+            #     print i, j, value
+            #     value = 4
+            # if(value < 0):
+            #     print i, j, value
+            #     value = 0
+            # points.append(value)
+
             value = energy_density(k, x, y, z)
-            bucket_value = int(floor(maxint * value))
-            if(bucket_value > maxintr or bucket_value < 0):
-                print i, j, bucket_value
-                bucket_value = maxintr
+            bucket_value = int(floor(256*value))
+            if(value > 1):
+                print i, j, value
+                bucket_value = 0
+            if(value < 0):
+                print i, j, value
+                bucket_value = 0
             points.append(bucket_value)
 
 
@@ -383,11 +394,13 @@ def energy_density_on_yz_plane(k, y0, y1, z0, z1, x, partition_size):   # If thi
             z = z0 + j * z_step
 
             value = energy_density(k, x, y, z)
-            bucket_value = int(floor(maxint * value))
-            if(bucket_value > maxintr or bucket_value < 0):
-                print i, j, bucket_value
-                bucket_value = maxintr
-            points.append(bucket_value)
+            if(value > 4):
+                print i, j, value
+                value = 4
+            if(value < 0):
+                print i, j, value
+                value = 0
+            points.append(value)
 
 
     return points
@@ -405,11 +418,13 @@ def energy_density_on_xz_plane(k, x0, x1, z0, z1, y, partition_size):   # If thi
             z = z0 + j * z_step
 
             value = energy_density(k, x, y, z)
-            bucket_value = int(floor(maxint * value))
-            if(bucket_value > maxintr or bucket_value < 0):
-                print i, j, bucket_value
-                bucket_value = maxintr
-            points.append(bucket_value)
+            if(value > 4):
+                print i, j, value
+                value = 4
+            if(value < 0):
+                print i, j, value
+                value = 0
+            points.append(value)
 
 
     return points
@@ -457,10 +472,12 @@ def write_point_to_file(points, filename):
     """
     :rtype : object
     """
-    fo = open(os.path.expanduser(filename), 'wb')
-    byteArray = bytearray(points)
-    fo.write(byteArray)
-    fo.close()
+    write_floats(filename, points)     # We have this if we want floating point, and below for byte
+
+    # fo = open(os.path.expanduser("~/Desktop/numerical monopoles/testing_higgs/" + filename), 'wb')
+    # byteArray = bytearray(points)
+    # fo.write(byteArray)
+    # fo.close()
 
 
 
