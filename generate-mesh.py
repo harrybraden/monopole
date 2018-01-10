@@ -36,14 +36,14 @@ def reflect_symmetries(positive_quadrant):
 
 def unsmoothed_data(pth):
     fo = open(os.path.expanduser(pth), 'rb')
-    byte_data = numpy.fromfile(fo, dtype=numpy.uint8)
+    byte_data = numpy.fromfile(fo, dtype=numpy.float64)
     return reconstruct_2d(byte_data)
 
 def smoothed_data(pth):
     return smoothing_tools.smooth_2d(unsmoothed_data(pth))
 
 def reflected_data(pth):
-    return reflect_symmetries(smoothed_data(pth))
+    return reflect_symmetries(unsmoothed_data(pth))#smoothed_data(pth))
 
 def print_obj(points, faces):
     print "# OBJ file"
@@ -56,9 +56,9 @@ def print_obj(points, faces):
 def load_data(k, intensity):
     zrange = arange(0.025, 2.975, 0.05)
     points = []
-    volume = np.ndarray(shape=(len(zrange)*2,120,120), dtype=int)
+    volume = np.ndarray(shape=(len(zrange)*2,120,120), dtype=float)
     for z, zval in enumerate(zrange):
-        pth = './python_results/k=%.02f/xy_%s_0.025-3.025_0.025-3.025_%s_60' % (k, k, zval)
+        pth = './python_smoothed/k=%.02f/xy_%.02f_%s' % (k, k, zval)
         dat = reflected_data(pth)
         for y, row in enumerate(dat):
             for x, val in enumerate(row):
@@ -67,12 +67,13 @@ def load_data(k, intensity):
 
     vertices, triangles = mcubes.marching_cubes(volume, intensity)
     print_obj(vertices, triangles)
+    # TODO use Catmull-Clarke to smooth voxel mesh
     print "#", k, intensity
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('k', type=float)
-    parser.add_argument('threshold', type=int)
+    parser.add_argument('threshold', type=float)
     args = parser.parse_args()
     load_data(args.k, args.threshold)
