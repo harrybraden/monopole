@@ -6,6 +6,7 @@ import copy
 import smoothing_tools
 import mcubes
 import argparse
+import scipy.ndimage
 
 def reconstruct_2d(data):
     n = int(sqrt(data.size))
@@ -45,6 +46,9 @@ def smoothed_data(pth):
 def reflected_data(pth):
     return reflect_symmetries(unsmoothed_data(pth))#smoothed_data(pth))
 
+def interpolated_data(data):
+    return scipy.ndimage.zoom(data, 3, order=3)
+
 def print_obj(points, faces):
     print "# OBJ file"
     for v in points:
@@ -64,6 +68,8 @@ def load_data(k, intensity):
             for x, val in enumerate(row):
                 volume[z + len(zrange), y, x] = val
                 volume[len(zrange) - z, y, x] = val
+
+    volume = interpolated_data(volume)
 
     vertices, triangles = mcubes.marching_cubes(volume, intensity)
     print_obj(vertices, triangles)
