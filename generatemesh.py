@@ -1,12 +1,5 @@
-from numpy import sqrt, int, arange
-import numpy as np
-import os
-import numpy
-import copy
-import smoothing_tools
 import mcubes
 import argparse
-import scipy.ndimage
 import data
 
 def print_obj(points, faces):
@@ -23,8 +16,6 @@ def create_mesh(k, intensity):
     print_obj(vertices, triangles)
     # TODO use Catmull-Clarke to smooth voxel mesh
     print "#", k, intensity
-
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
