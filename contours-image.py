@@ -4,6 +4,10 @@ from skimage import measure
 import matplotlib.pyplot as plt
 from numpy import sqrt, int, arange, rot90
 
+
+ZMAX=2.975
+ZMIN=0.025
+
 def draw_slice(layer, ax, z, k):
     #levels = [0.01, 0.1, 0.2, 0.3, 0.4, 0.5]
     contours = ax.contour(layer)#, levels=levels)
@@ -12,12 +16,12 @@ def draw_slice(layer, ax, z, k):
     #for n, contour in enumerate(contours):
     #    ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
 
-    ax.imshow(layer, interpolation='nearest', alpha=0.5)
+    ax.imshow(layer, interpolation='nearest', alpha=0.5, vmin=0, vmax=0.2)
 
     ax.axis('image')
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_title("z=%.02f, k=%.02f" % (z, k), y=0.9)
+    ax.set_title("x=%.02f, k=%.02f" % (z, k), y=0.9)
 
 def draw_contours():
     print "# Trace contours"
@@ -40,9 +44,9 @@ def draw_contours():
 
         lim = len(volume) / 2
         for r in range(0, rows):
-            zind = int(float(r) / float(rows) * lim) # lim - int(pow(float(r) / float(rows), 2) * lim)
-            zrange = arange(0.025, 2.975, 0.05)
-            z = float(zind + 1) / float(len(volume)) * 2.975 - 0.025
+            rp = float(r) / float(rows)
+            zind = int(rp * lim)
+            z = rp * (ZMAX-ZMIN) + ZMIN
             print "LAYER", r, zind, len(volume), len(axes)
             layer = volume[zind + 1]
             draw_slice(layer, axes[r, c], z, k)
