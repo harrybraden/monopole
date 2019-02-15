@@ -2,8 +2,8 @@ from numpy import sqrt, int, arange
 import os
 import numpy
 import copy
-import smoothing_tools
 from PIL import Image
+import data
 
 def reconstruct_2d(data):
     n = int(sqrt(data.size))
@@ -32,17 +32,6 @@ def reflect_symmetries(positive_quadrant):
 
     return full
 
-def unsmoothed_data(pth):
-    fo = open(os.path.expanduser(pth), 'rb')
-    byte_data = numpy.fromfile(fo, dtype=numpy.uint8)
-    return reconstruct_2d(byte_data)
-
-def smoothed_data(pth):
-    return smoothing_tools.smooth_2d(unsmoothed_data(pth))
-
-def reflected_data(pth):
-    return reflect_symmetries(smoothed_data(pth))
-
 def png_from(pth):
     dat = unsmoothed_data(pth)
     flattened = [x for sub in dat for x in sub]
@@ -64,12 +53,13 @@ def load_data():
         zres = []
         zim = Image.new( 'L', (60, 60 * len(zrange)), 'black')
         for z in zrange:
-            # pth = './python_results/k=%.02f/xy_%s_0.025-3.025_0.025-3.025_%s_60' % (k, k, z)
-            pth = './python_converted_scaled/k=%.02f/xy_%.02f_%s' % (k, k, z)
-            print  pth
-            dat = unsmoothed_data(pth)
+            pth = './python_smoothed/k=%.02f/xy_%.02f_%.03f' % (k, k, z)
+            print pth
+            dat = data.unsmoothed_data(pth)
             flattened = [x for sub in dat for x in sub]
-            zres += flattened
+            flattened = numpy.nan_to_num(flattened)
+            scaled = [int(x * 255) for x in flattened]
+            zres += scaled
 
         zim.putdata(zres)
         ims.append(zim)

@@ -1,6 +1,6 @@
 var UNIT = 60
 var KVAL = 30
-var INTENSITY = 0.5
+var INTENSITY = 0.6
 var DATA = null
 
 var scene = new THREE.Scene()
@@ -15,19 +15,20 @@ camera.lookAt(0,0,0)
 
 
 var drawDebug = function(){
-  scene.background = new THREE.Color( 0x333333 );
+  scene.background = new THREE.Color( 0xEEEEEE );
   var geometry = new THREE.BoxGeometry( 3, 3, 3 );
   var origin = new THREE.Mesh( 
                       geometry,
                       new THREE.MeshBasicMaterial( { color: 0xff0000 } )
                     )
   scene.add(origin);
-  var up = new THREE.Mesh( 
-                      geometry,
-                      new THREE.MeshBasicMaterial( { color: 0x00ff00 } )
-                    )
-  up.position.y = 100
-  scene.add(up);
+
+  var gridHelperY = new THREE.GridHelper( UNIT, 10, 0x444444, 0x00ff00);
+	scene.add( gridHelperY );
+
+  //var gridHelperX = new THREE.GridHelper( UNIT, 10, 0x444444, 0x0000ff);
+	//gridHelperX.geometry.rotateX(Math.PI/2)
+	//scene.add( gridHelperX );
 }
 
 var drawImagePlane = function(buf, z, k){
@@ -151,15 +152,17 @@ function init() {
 
     controls = new THREE.OrbitControls(camera, renderer.domElement)
     renderer.setSize( window.innerWidth, window.innerHeight );
+
     document.body.appendChild( renderer.domElement );
 
     document.getElementById('k').onchange = function(e){
       KVAL=e.target.value
+			document.getElementById('kVal').textContent = KVAL
     }
     document.getElementById('intensity').onchange = function(e){
       INTENSITY=e.target.value
+			document.getElementById('intensityVal').textContent = INTENSITY
     }
-
 }
 
 loadData(function(ctx){
