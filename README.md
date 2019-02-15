@@ -24,13 +24,13 @@ These meshes can be visualised with the many mesh viewers, or even 3D printed.
 
 ## Contents
 
-`README.md`: This documentation.
-`Makefile`: to build the visualisations. See below.
-`visualise/`: The interactive visualiser.
-`generate-image-data.py`: Generates the image data for the interactive web visualiser
-`data.py`: Load and manipulate the data
-`contours-image.py`: Generate the CATSCAN image
-`generatemesh.py`: Generate a 3d obj file from the data
+- `README.md`: This documentation.
+- `Makefile`: to build the visualisations. See below.
+- `visualise/`: The interactive visualiser.
+- `generate-image-data.py`: Generates the image data for the interactive web visualiser
+- `data.py`: Load and manipulate the data
+- `contours-image.py`: Generate the CATSCAN image
+- `generatemesh.py`: Generate a 3d obj file from the data
 
 ## Running the visualisations
 
