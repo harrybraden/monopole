@@ -17,3 +17,7 @@ models/%.obj:
 
 contours.png: contours-image.py
 	python contours-image.py
+
+run-webapp:
+	cd visualise && python -m SimpleHTTPServer 8080
+.PHONY: run-webapp
