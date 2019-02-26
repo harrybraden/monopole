@@ -489,10 +489,10 @@ def write_point_to_file(points, filename):
 # print str(t16-t15)
 #
 # t4 = time.time()
-# A  = energy_density(.8, 1.5, 0.7, 0.3)
+A  = energy_density(.8, 1.5, 0.7, 0.3)
 # t5 = time.time()
 #
-# print A
+print A
 # print str(t5-t4)
 
 
