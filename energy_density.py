@@ -29,14 +29,8 @@ from numpy import roots, complex, complex64, complex128, mat, dot, trace, pi, sq
 from cmath import exp
 import time
 from mpmath import ellipk, ellipe, j, taufrom, jtheta, qfrom, ellipf, asin, mfrom
-# from numpy import roots, complex64, conj, pi, sqrt, sum, trace, linalg, array
 import time
-import math
-import os
-import sys
-from array import array
 from files import *
-from python_expressions.dexp import dexp
 from python_expressions.dmus import dmus
 from python_expressions.dzetas import dzetas
 from python_expressions.ddmus import ddmus
@@ -50,43 +44,33 @@ from modified_expressions.dgrams3 import dgrams3
 from python_expressions.phis import phis
 from modified_expressions.dphis111 import dphis111
 from modified_expressions.dphis112 import dphis112
-# from modified_expressions.dphis121 import dphis121
 from modified_expressions.dphis122 import dphis122
 from modified_expressions.dphis211 import dphis211
 from modified_expressions.dphis212 import dphis212
-# from modified_expressions.dphis221 import dphis221
 from modified_expressions.dphis222 import dphis222
 from modified_expressions.dphis311 import dphis311
 from modified_expressions.dphis312 import dphis312
-# from modified_expressions.dphis321 import dphis321
 from modified_expressions.dphis322 import dphis322
 from modified_expressions.ddgrams111 import ddgrams111
 from modified_expressions.ddgrams112 import ddgrams112
-# from modified_expressions.ddgrams121 import ddgrams121
 from modified_expressions.ddgrams122 import ddgrams122
 from modified_expressions.ddgrams211 import ddgrams211
 from modified_expressions.ddgrams212 import ddgrams212
-# from modified_expressions.ddgrams221 import ddgrams221
 from modified_expressions.ddgrams222 import ddgrams222
 from modified_expressions.ddgrams311 import ddgrams311
 from modified_expressions.ddgrams312 import ddgrams312
-# from modified_expressions.ddgrams321 import ddgrams321
 from modified_expressions.ddgrams322 import ddgrams322
 from modified_expressions.ddphis111 import ddphis111
 from modified_expressions.ddphis112 import ddphis112
-# from modified_expressions.ddphis121 import ddphis121
 from modified_expressions.ddphis122 import ddphis122
 from modified_expressions.ddphis211 import ddphis211
 from modified_expressions.ddphis212 import ddphis212
-# from modified_expressions.ddphis221 import ddphis221
 from modified_expressions.ddphis222 import ddphis222
 from modified_expressions.ddphis311 import ddphis311
 from modified_expressions.ddphis312 import ddphis312
-# from modified_expressions.ddphis321 import ddphis321
 from modified_expressions.ddphis322 import ddphis322
 
-# def eprint(*args, **kwargs):
-#         print(*args, file=sys.stderr, **kwargs)
+
 
 def quartic_roots(k, x1, x2, x3):
     K = complex128(ellipk(k**2))
@@ -479,24 +463,3 @@ def write_point_to_file(points, filename):
     # fo.write(byteArray)
     # fo.close()
 
-
-
-# t15 = time.time()
-# D  = test_timing(.8, 1.5, 0.5, 0.2)
-# t16 = time.time()
-#
-# print D
-# print str(t16-t15)
-#
-# t4 = time.time()
-A  = energy_density(.8, 1.5, 0.7, 0.3)
-# t5 = time.time()
-#
-print A
-# print str(t5-t4)
-
-
-# print order_roots(quartic_roots(0.8, 1.0, 0, 2.35))
-
-
-# print quartic_roots(0.8, 1 , 0, 2.35)
