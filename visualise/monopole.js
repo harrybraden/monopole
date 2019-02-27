@@ -1,5 +1,6 @@
-var UNIT = 60
-var KVAL = 30
+var TILE_SIZE = 60
+var UNIT = TILE_SIZE
+var KVAL = 0.3
 var INTENSITY = 0.6
 var DATA = null
 
@@ -23,7 +24,7 @@ var drawDebug = function(){
                     )
   scene.add(origin);
 
-  var gridHelperY = new THREE.GridHelper( UNIT, 10, 0x444444, 0x00ff00);
+  var gridHelperY = new THREE.GridHelper( UNIT, 6, 0x444444, 0x00ff00);
 	scene.add( gridHelperY );
 
   //var gridHelperX = new THREE.GridHelper( UNIT, 10, 0x444444, 0x0000ff);
@@ -31,7 +32,7 @@ var drawDebug = function(){
 	//scene.add( gridHelperX );
 }
 
-var drawImagePlane = function(buf, z, k){
+var drawImagePlane = function(buf, z){
   var texture = new THREE.DataTexture(
                       buf,
                       60,
@@ -40,10 +41,10 @@ var drawImagePlane = function(buf, z, k){
                     )
   var material = new THREE.MeshBasicMaterial( { 
     map: texture,
-    //color: 'blue',
+    color: 0xff9999,
     transparent: true,
     alphaMap: texture,
-    alphaTest: INTENSITY
+    alphaTest: INTENSITY / 1.5
   } )
 
   texture.needsUpdate = true
@@ -105,10 +106,10 @@ function animate() {
   }
 
   drawDebug()
-  for (var z = 0; z < 60; z++) {
+  for (var z = 0; z < TILE_SIZE; z++) {
     var data = getDataFor(ctx, z, KVAL)
-    drawImagePlane(data, z, KVAL)
-    drawImagePlane(data, -z, KVAL)
+    drawImagePlane(data, z)
+    drawImagePlane(data, -z)
   }
 
   renderer.render(scene, camera);
@@ -130,11 +131,13 @@ var loadData = function(cb){
 }
 
 var getDataFor = function(ctx, z, k) {
-  var imdata = ctx.getImageData(k * 60, z*60 , 60, 60);
+  // K is in range 0.01 - 0.99
+  var koffset = Math.round((k - 0.01) * 100)
+  var imdata = ctx.getImageData(koffset * TILE_SIZE, z* TILE_SIZE , TILE_SIZE, TILE_SIZE);
   var data = imdata.data
 
-  var res = new Uint8Array(60*60*4)
-  for (var i = 0; i < 60*60; i++){
+  var res = new Uint8Array(TILE_SIZE*TILE_SIZE*4)
+  for (var i = 0; i < TILE_SIZE*TILE_SIZE; i++){
     res[i*4]     = data[i*4] // r
     res[i*4 + 1] = data[i*4 + 1] // g
     res[i*4 + 2] = data[i*4 + 2] // b
@@ -156,7 +159,7 @@ function init() {
     document.body.appendChild( renderer.domElement );
 
     document.getElementById('k').onchange = function(e){
-      KVAL=e.target.value
+      KVAL = e.target.value
 			document.getElementById('kVal').textContent = KVAL
     }
     document.getElementById('intensity').onchange = function(e){
