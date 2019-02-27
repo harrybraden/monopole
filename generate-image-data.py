@@ -58,7 +58,9 @@ def load_data():
             dat = data.unsmoothed_data(pth)
             flattened = [x for sub in dat for x in sub]
             flattened = numpy.nan_to_num(flattened)
-            scaled = [int(x * 255) for x in flattened]
+            # value is in range 0 - 1.5
+            scaled = [x / 1.5 for x in flattened]
+            scaled = [int(x * 255) for x in scaled]
             zres += scaled
 
         zim.putdata(zres)
