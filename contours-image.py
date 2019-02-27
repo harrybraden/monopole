@@ -16,12 +16,12 @@ def draw_slice(layer, ax, z, k):
     #for n, contour in enumerate(contours):
     #    ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
 
-    ax.imshow(layer, interpolation='nearest', alpha=0.5, vmin=0, vmax=0.2)
+    ax.imshow(layer, interpolation='nearest', alpha=0.5, vmin=0, vmax=0.6)
 
     ax.axis('image')
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_title("x=%.02f, k=%.02f" % (z, k), y=0.9)
+    ax.set_title("y=%.02f, k=%.02f" % (3 - z, k), y=0.9)
 
 def draw_contours():
     print "# Trace contours"
@@ -36,7 +36,7 @@ def draw_contours():
 
     for c in range(0, cols):
         krange = arange(0.01, 0.99, 0.01)
-        k = float(c) / float(cols) * 0.99 + 0.01
+        k = float(c) / float(cols - 1) * 0.98 + 0.01
 
         print "# Load data", k 
         volume = data.load_data(k, smoothness=2) 
@@ -44,12 +44,12 @@ def draw_contours():
 
         lim = len(volume) / 2
         for r in range(0, rows):
-            rp = float(r) / float(rows)
+            rp = float(r + 1) / float(rows)
             zind = int(rp * lim)
             z = rp * (ZMAX-ZMIN) + ZMIN
             print "LAYER", r, zind, len(volume), len(axes)
             layer = volume[zind + 1]
-            draw_slice(layer, axes[r, c], z, k)
+            draw_slice(layer, axes[rows - r - 1, c], z, k)
 
     plt.savefig('contours.png', dpi=100, bbox_inches='tight', pad_inches=0)
 
