@@ -18,8 +18,8 @@ a mesh of that threshold's contour.
 
 These meshes can be visualised with the many mesh viewers, or even 3D printed.
 
-[1] https://peterbraden.co.uk/monopole/browse.html
-[2] Lorensen, W. E.; Cline, Harvey E. (1987). "Marching cubes: A high resolution 3d surface construction algorithm". ACM Computer Graphics. 21 (4): 163–169. doi:10.1145/37402.37422
+- [1] https://peterbraden.co.uk/monopole/browse.html
+- [2] Lorensen, W. E.; Cline, Harvey E. (1987). "Marching cubes: A high resolution 3d surface construction algorithm". ACM Computer Graphics. 21 (4): 163–169. doi:10.1145/37402.37422
 
 
 ## Contents
@@ -29,7 +29,7 @@ These meshes can be visualised with the many mesh viewers, or even 3D printed.
 - `visualise/`: The interactive visualiser.
 - `generate-image-data.py`: Generates the image data for the interactive web visualiser
 - `data.py`: Load and manipulate the data
-- `contours-image.py`: Generate the CATSCAN image
+- `contours-image.py`: Generate the 'Tomogram' image
 - `generatemesh.py`: Generate a 3d obj file from the data
 
 ## Running the visualisations
